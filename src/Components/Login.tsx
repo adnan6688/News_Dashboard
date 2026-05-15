@@ -3,6 +3,7 @@ import bannar from "../assets/bannar.png";
 import { useMutation } from "@tanstack/react-query";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import logo from './../assets/Logo.jpeg'
+import { loginFn } from "./loginapi";
 
 type LoginData = {
   email: string;
@@ -14,9 +15,11 @@ function Login() {
 
   const loginMutation = useMutation({
     mutationFn: async (data: LoginData) => {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      console.log(data);
+      const ans = await loginFn(data)
+      if (ans.success) {
+        //
+      }
 
       return {
         success: true,
