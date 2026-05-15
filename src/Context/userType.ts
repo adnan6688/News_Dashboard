@@ -1,5 +1,5 @@
 
-
+import type { QueryObserverResult } from "@tanstack/react-query";
 export interface IUser {
   _id: string;
   name: string;
@@ -21,6 +21,6 @@ export interface IUser {
 export interface IValue {
   user: IUser | null;
   loading: boolean;
-  refetchUser: () => Promise<void>;
-  setUser: (user: IUser | null) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  refetchUser: () => Promise<QueryObserverResult<any, Error>>;
 }

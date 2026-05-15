@@ -1,15 +1,18 @@
 import { useState } from "react";
-import { Outlet, NavLink } from "react-router";
+import { Outlet, NavLink, useLocation } from "react-router";
 import logo from './../assets/WhatsApp_Image_2026-05-12_at_9.52.35_AM__1_-removebg-preview.png'
 
 export default function DashboardLayout() {
     const [open, setOpen] = useState(false);
 
     const menu = [
-        { name: "Home", path: "/" },
-        { name: "Users", path: "/users" },
+        { name: "Home", path: "/dashboard" },
+        { name: "Users", path: "/dashboard/users" },
         { name: "Settings", path: "/settings" },
     ];
+    const useLocaion = useLocation()
+
+  
 
     return (
         <div className="flex h-screen w-screen overflow-hidden bg-gray-100">
@@ -26,8 +29,8 @@ export default function DashboardLayout() {
                         <NavLink
                             key={item.path}
                             to={item.path}
-                            className={({ isActive }) =>
-                                `block px-4 py-2 rounded-lg transition-colors duration-200 ${isActive ? "bg-black text-white" : "hover:bg-gray-200"
+                            className={() =>
+                                `block px-4 py-2 rounded-lg transition-colors duration-200 ${useLocaion.pathname == item.path ? "bg-black text-white" : "hover:bg-gray-200"
                                 }`
                             }
                         >

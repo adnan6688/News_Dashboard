@@ -1,37 +1,39 @@
 import { useState } from "react";
 import bannar from "../assets/bannar.png";
-import { useMutation } from "@tanstack/react-query";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import logo from './../assets/Logo.jpeg'
 import { loginFn } from "./loginapi";
+import Toast from "../Toast/Toast";
 
-type LoginData = {
-  email: string;
-  password: string;
-};
+import { useNavigate } from "react-router";
+
+
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [loginLoad, setLoginLoad] = useState<boolean>(false)
+  const navigate = useNavigate()
 
-  const loginMutation = useMutation({
-    mutationFn: async (data: LoginData) => {
+  const userLogin = async ({ email, password }: { email: string, password: string }) => {
 
-      const ans = await loginFn(data)
-      if (ans.success) {
-        //
-      }
+    const result = await loginFn({ email, password, });
 
-      return {
-        success: true,
-      };
-    },
+    if (result.success) {
 
-    onSuccess: () => {
-      alert("Login Success");
-    },
-  });
+      Toast({ type: 'success', message: result?.data?.message as string })
+      setLoginLoad(false)
+      navigate('/dashboard')
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    } else {
+
+      Toast({ type: 'error', message: result?.message as string })
+      setLoginLoad(false)
+    }
+  };
+
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoginLoad(true)
     e.preventDefault();
 
     const form = e.currentTarget;
@@ -44,10 +46,7 @@ function Login() {
       form.elements.namedItem("password") as HTMLInputElement
     ).value;
 
-    loginMutation.mutate({
-      email,
-      password,
-    });
+    await userLogin({ email, password })
   };
 
   return (
@@ -138,10 +137,10 @@ function Login() {
           {/* login button */}
           <button
             type="submit"
-            disabled={loginMutation.isPending}
+
             className="w-full rounded-xl bg-[#1E466E] hover:bg-[#1E466E] transition-all duration-300 py-4 text-white  text-lg shadow-lg disabled:opacity-60"
           >
-            {loginMutation.isPending ? "Logging..." : "Login"}
+            {loginLoad ? 'loading....' : "Sign In"}
           </button>
         </form>
       </div>

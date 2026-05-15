@@ -1,48 +1,41 @@
-
-
-import { useCallback, useEffect, useState } from "react";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "../BaseUrl/baseurl";
+import type { IValue } from "./userType";
 import { AuthContext } from "./AuthContext";
-import axios from "axios";
-import type { IUser } from "./userType";
-import { getErrorMessage } from "../Utils/errorMessage";
-
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [user, setUser] = useState<IUser | null>(null);
-    const [loading, setLoading] = useState(true);
-
-    const refetchUser = useCallback(async () => {
-        try {
-            const res = await axios.get("/api/auth/me", {
-                withCredentials: true,
-            });
-
-            setUser(res.data.user);
-        } catch (err) {
-            const message = getErrorMessage(err)
-            console.log(message)
-            setUser(null);
-        }
-    }, []);
 
 
 
-    useEffect(() => {
-        const initAuth = async () => {
-            setLoading(true);
+interface Props {
+    children: React.ReactNode;
+}
 
-            await refetchUser();
+const AuthProvider = ({ children }: Props) => {
 
-            setLoading(false);
-        };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { data, isLoading, isError, refetch, } = useQuery({
+        queryKey: ["currentUser"],
+        queryFn: async () => {
+            const res = await axiosInstance.get("user/getMe");
+            return res.data.data;
+        },
+        staleTime: 1000 * 60 * 5, // 5 min cache
+        retry: false,
+    });
 
-        initAuth();
-    }, [refetchUser]);
+    const user = data ? data : null;
+
+    const value: IValue = {
+        user,
+        loading: isLoading,
+        refetchUser: refetch,
+    };
 
     return (
-        <AuthContext.Provider
-            value={{ user, setUser, loading, refetchUser }}
-        >
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );
 };
+
+export default AuthProvider;
