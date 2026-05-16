@@ -3,6 +3,7 @@ import Login from "../Components/Login";
 import DashboardLayout from "../pages/DashboardLayout";
 import DashboardHome from "../pages/DashboardHome";
 import Users from "../pages/Users";
+import PrivetRoutes from "./PrivetRoutes";
 
 
 
@@ -12,10 +13,12 @@ export const router = createBrowserRouter([
         element: <Login></Login>
     }, {
         path: '/dashboard',
-        element: <DashboardLayout></DashboardLayout>,
+        element: <PrivetRoutes>
+            <DashboardLayout></DashboardLayout>
+        </PrivetRoutes>,
         children: [
             {
-                index : true,
+                index: true,
                 element: <DashboardHome></DashboardHome>
             }, {
                 path: 'users',

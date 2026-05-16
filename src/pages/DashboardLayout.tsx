@@ -30,7 +30,7 @@ export default function DashboardLayout() {
                             key={item.path}
                             to={item.path}
                             className={() =>
-                                `block px-4 py-2 rounded-lg transition-colors duration-200 ${useLocaion.pathname == item.path ? "bg-black text-white" : "hover:bg-gray-200"
+                                `block px-4 py-2 rounded-lg transition-colors duration-200 ${useLocaion.pathname == item.path ? "bg-sky-950 text-white" : "hover:bg-gray-200"
                                 }`
                             }
                         >
@@ -103,7 +103,7 @@ export default function DashboardLayout() {
                 </header>
 
                 {/* Scrollable Content Body */}
-                <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50 raw-scroll">
+                <main className="flex-1 overflow-y-auto p-2 md:p-6 bg-gray-50 raw-scroll">
                     <Outlet />
                 </main>
             </div>

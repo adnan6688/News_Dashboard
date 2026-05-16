@@ -6,28 +6,41 @@ import { loginFn } from "./loginapi";
 import Toast from "../Toast/Toast";
 
 import { useNavigate } from "react-router";
+import { useAuth } from "../Hook/useAuth";
 
 
 
 function Login() {
+
   const [showPassword, setShowPassword] = useState(false);
   const [loginLoad, setLoginLoad] = useState<boolean>(false)
   const navigate = useNavigate()
+  const { refetchUser } = useAuth();
 
-  const userLogin = async ({ email, password }: { email: string, password: string }) => {
 
+  // login fun
+  const userLogin = async ({ email, password, }: { email: string; password: string; }) => {
     const result = await loginFn({ email, password, });
 
     if (result.success) {
 
-      Toast({ type: 'success', message: result?.data?.message as string })
-      setLoginLoad(false)
-      navigate('/dashboard')
+      await refetchUser();
 
+      Toast({
+        type: "success",
+        message: result?.data?.message as string,
+      });
+
+      setLoginLoad(false);
+
+      navigate("/dashboard");
     } else {
+      Toast({
+        type: "error",
+        message: result?.message as string,
+      });
 
-      Toast({ type: 'error', message: result?.message as string })
-      setLoginLoad(false)
+      setLoginLoad(false);
     }
   };
 
