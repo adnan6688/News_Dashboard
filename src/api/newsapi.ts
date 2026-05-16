@@ -14,6 +14,7 @@ export const breakingNewsApi = async () => {
 
         const news = await axiosInstance.get('news/breaking-news')
 
+        console.log(news.data.data.allNews)
         return {
             success: true,
             news: news.data.data.allNews || []

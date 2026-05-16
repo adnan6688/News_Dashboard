@@ -12,7 +12,7 @@ export default function DashboardLayout() {
     ];
     const useLocaion = useLocation()
 
-  
+
 
     return (
         <div className="flex h-screen w-screen overflow-hidden bg-gray-100">
@@ -91,19 +91,48 @@ export default function DashboardLayout() {
             <div className="flex flex-col flex-1 h-screen overflow-hidden">
 
                 {/* Topbar */}
-                <header className="h-14 bg-white shadow flex items-center px-4 md:px-6 shrink-0 z-10">
-                    <button
-                        className="md:hidden mr-3 text-xl p-2 hover:bg-gray-100 rounded transition-colors"
-                        onClick={() => setOpen(true)}
-                    >
-                        ☰
-                    </button>
+                <header className="w-full bg-white border-b border-slate-100 flex items-center px-4 md:px-8 py-4 shrink-0 z-10">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-3">
 
-                    <h1 className="font-semibold">Dashboard</h1>
+                       
+                        <div className="flex items-start gap-1 sm:gap-0">
+                       
+                            <button
+                                className="md:hidden mr-3 text-2xl p-1.5 text-slate-600 hover:bg-slate-50 border border-slate-100 rounded-xl transition-colors mt-1"
+                                onClick={() => setOpen(true)}
+                            >
+                                ☰
+                            </button>
+
+                            <div>
+                                <h1 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+                                    Welcome back, Admin <span className="animate-bounce"></span>
+                                </h1>
+                                <p className="text-xs md:text-sm text-slate-400 font-medium mt-0.5">
+                                    Here's what's happening with your news portal today.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="self-start sm:self-center flex items-center gap-2 bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-100 text-slate-600 text-xs md:text-sm font-semibold shadow-sm">
+                            <svg className="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span className="text-slate-700">
+                                {new Date().toLocaleDateString('en-US', {
+                                    weekday: 'short',
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric'
+                                })}
+                            </span>
+                        </div>
+
+                    </div>
                 </header>
 
                 {/* Scrollable Content Body */}
-                <main className="flex-1 overflow-y-auto p-2 md:p-6 bg-gray-50 raw-scroll">
+                <main className="flex-1 overflow-y-auto p-2 md:p-5 bg-gray-50 raw-scroll">
                     <Outlet />
                 </main>
             </div>

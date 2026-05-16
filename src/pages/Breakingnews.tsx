@@ -9,6 +9,30 @@ type NewsItem = {
     date: string;
 };
 
+
+function timeAgo(date: string | Date) {
+    const now = new Date().getTime();
+    const past = new Date(date).getTime();
+
+    const diff = now - past;
+
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
+
+    if (seconds < 60) return `${seconds}s ago`;
+    if (minutes < 60) return `${minutes}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    if (days < 30) return `${days}d ago`;
+    if (months < 12) return `${months}mo ago`;
+    return `${years}y ago`;
+}
+
+
+
 export default function Breakingnews() {
     const { data, isLoading, isError } = useQuery({
         queryKey: ["news"],
@@ -61,11 +85,7 @@ export default function Breakingnews() {
                                 {news.title}
                             </h3>
                             <span className="text-[11px] text-gray-400">
-                                {news.date ? new Date(news.date).toLocaleDateString(undefined, {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    year: 'numeric'
-                                }) : 'May 16, 2026'}
+                                {news.date ? timeAgo(news.date) : "just now"}
                             </span>
                         </div>
                     </div>
@@ -92,11 +112,7 @@ export default function Breakingnews() {
                                 {news.title}
                             </h3>
                             <span className="text-[11px] text-gray-400">
-                                {news.date ? new Date(news.date).toLocaleDateString(undefined, {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    year: 'numeric'
-                                }) : 'May 16, 2026'}
+                                {news.date ? timeAgo(news.date) : "just now"}
                             </span>
                         </div>
                     </div>
