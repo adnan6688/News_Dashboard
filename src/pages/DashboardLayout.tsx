@@ -8,7 +8,11 @@ export default function DashboardLayout() {
     const menu = [
         { name: "Home", path: "/dashboard" },
         { name: "Users", path: "/dashboard/users" },
-        { name: "Settings", path: "/settings" },
+        { name: "Categories", path: "/dashboard/categories" },
+        { name: "Videos", path: "/dashboard/videos" },
+        { name: "Bannar", path: "/dashboard/bannars" },
+        { name: "News", path: "/dashboard/news" },
+        { name: "Settings", path: "/dashboard/settings" },
     ];
     const useLocaion = useLocation()
 

@@ -13,8 +13,6 @@ export const breakingNewsApi = async () => {
     try {
 
         const news = await axiosInstance.get('news/breaking-news')
-
-        console.log(news.data.data.allNews)
         return {
             success: true,
             news: news.data.data.allNews || []
@@ -30,6 +28,7 @@ export const breakingNewsApi = async () => {
         }
     }
 }
+
 
 export const userInfoCoutnapi = async () => {
 
@@ -98,4 +97,89 @@ export const recentFiveUsersapi = async () => {
         }
     }
 
+}
+
+
+
+
+
+
+
+
+// recent Added video 
+export const recentAddedvideoapi = async () => {
+
+    try {
+        const res = await axiosInstance.get('video/recentAddedvideo')
+
+        return {
+            success: true,
+            data: res.data.data || []
+        }
+
+    } catch (err) {
+        const message = getErrorMessage(err)
+
+        return {
+            success: false,
+            message
+        }
+    }
+}
+
+
+
+// recent bannars
+
+export const recentBannarApi = async () => {
+
+    try {
+        const res = await axiosInstance.get('bannar/recenAddedBannar')
+
+        return {
+            success: true,
+            data: res?.data?.data || []
+        }
+    } catch (err) {
+        const message = getErrorMessage(err)
+        return {
+            success: false,
+            message
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+// ctr 
+type IParams = {
+    limit?: number
+}
+export const ctrApi = async (limit: number) => {
+
+    const params: IParams = {}
+
+    if (limit) {
+        params.limit = limit
+    }
+
+    try {
+        const res = await axiosInstance.get('ctr/get-ctr', { params })
+
+        return {
+            data: res?.data?.data || []
+        }
+    }
+    catch (err) {
+        const message = getErrorMessage(err)
+        return {
+            message
+        }
+    }
 }

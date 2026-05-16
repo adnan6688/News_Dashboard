@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { recentFiveUsersapi, userAnalyticsApi, userInfoCoutnapi } from "../api/newsapi";
+import { ctrApi, recentAddedvideoapi, recentBannarApi, recentFiveUsersapi, userAnalyticsApi, userInfoCoutnapi } from "../api/newsapi";
 import {
     Newspaper,
     Users,
@@ -12,6 +12,9 @@ import UserBarChart from "../Components/UserBarChart";
 import { useState } from "react";
 import Recent from "../Components/Recent";
 import Breakingnews from "./Breakingnews";
+import VideosCard from "../Components/VideosCard";
+import Bannars from "../Components/Bannars";
+import CtrAnalyticsList from "../Components/CtrAnalyticsList";
 
 
 
@@ -21,25 +24,47 @@ export default function DashboardHome() {
 
     const { data: userCount } = useQuery({
         queryKey: ['count'],
-        queryFn: userInfoCoutnapi
+        queryFn: userInfoCoutnapi,
+        retry: false,
+        refetchOnWindowFocus: false,
     })
 
 
     const { data: userAnaylictsData, isLoading: analyticsLoading } = useQuery({
         queryKey: ['analytics', yearInfo],
-        queryFn: () => userAnalyticsApi(yearInfo)
+        queryFn: () => userAnalyticsApi(yearInfo),
+        retry: false,
+        refetchOnWindowFocus: false,
     })
 
     const { data: recenUsers } = useQuery({
         queryKey: ['recentUsers'],
-        queryFn: recentFiveUsersapi
+        queryFn: recentFiveUsersapi, retry: false,
+        refetchOnWindowFocus: false,
     })
 
 
+    const { data: recentVideoData, isLoading: VideoLoading } = useQuery({
+        queryKey: ['recentVideo'],
+        queryFn: recentAddedvideoapi, retry: false,
+        refetchOnWindowFocus: false,
+    })
 
-    console.log(recenUsers?.data, "recent users result")
 
+    const { data: bannarsData, isLoading: BannarLoading } = useQuery({
+        queryKey: ['recentBannar'],
+        queryFn: recentBannarApi, retry: false,
+        refetchOnWindowFocus: false,
+    })
 
+    const { data: ctrData, isLoading: ctrLoading } = useQuery({
+        queryKey: ['ctr'],
+        queryFn: () => ctrApi(5),
+        retry: false,
+        refetchOnWindowFocus: false,
+    })
+
+    console.log(ctrData?.data)
 
 
     return (
@@ -124,6 +149,79 @@ export default function DashboardHome() {
                 <div className="w-full lg:w-2/5  rounded-xl  ">
                     <Recent users={recenUsers?.data} />
                 </div>
+            </div>
+
+
+            <div className="my-4">
+                <CtrAnalyticsList data={ctrData?.data}></CtrAnalyticsList>
+            </div>
+
+
+            <div className=" bg-transparent">
+
+                <div className="flex items-center justify-between gap-4 mb-4">
+
+                    <div className="flex items-center gap-2.5">
+                        {/* ভিডিও আইকন */}
+                        <div className="p-2 bg-red-50 text-red-500 rounded-xl border border-red-100 shrink-0">
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-bold text-slate-800 tracking-tight">
+                                Recently Added Videos
+                            </h2>
+                            <p className="text-xs text-slate-400 font-medium mt-0.5">
+                                Latest video content uploaded to the portal.
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <button
+                        onClick={() => {/* আপনার রাউটিং বা ফাংশন এখানে দিন */ }}
+                        className="relative flex items-center gap-1.5 py-1 text-sm text-red-500 uppercase cursor-pointer shrink-0 group transition-all duration-300"
+                    >
+
+                        <span>View All</span>
+
+
+                        <div className="relative w-4 h-4 overflow-hidden">
+                            <svg
+                                className="w-4 h-4 absolute inset-0 transform -translate-x-1 opacity-70 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-red-600 transition-all duration-300 ease-out"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth="3"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </div>
+
+
+                        <span className="absolute bottom-0 left-1/2 w-0  h-0.5  bg-red-500 transition-all duration-300 ease-out group-hover:w-full group-hover:left-0" />
+                    </button>
+
+                </div>
+
+                <div>
+                    {VideoLoading ? (
+
+                        <div className="flex items-center gap-3 p-6 bg-white rounded-2xl border border-slate-100 shadow-sm text-slate-500 font-medium">
+                            <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                            <span>Loading videos...</span>
+                        </div>
+                    ) : (
+                        <VideosCard videos={recentVideoData?.data} />
+                    )}
+                </div>
+            </div>
+
+
+            <div className="my-4">
+                <Bannars banners={bannarsData?.data} isLoading={BannarLoading} />
+
             </div>
 
         </div>
