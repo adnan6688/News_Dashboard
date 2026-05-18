@@ -61,7 +61,7 @@ export default function CtrAnalyticsList({ data }: CtrAnalyticsProps) {
       </div>
 
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-1 gap-6">
         {data?.map((item) => {
 
           const isBanner = item.type === "BANNAR";

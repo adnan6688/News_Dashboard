@@ -153,10 +153,6 @@ export const recentBannarApi = async () => {
 
 
 
-
-
-
-
 // ctr 
 type IParams = {
     limit?: number
@@ -183,3 +179,21 @@ export const ctrApi = async (limit: number) => {
         }
     }
 }
+
+
+
+
+
+
+// top users
+
+export const topusersapi = async () => {
+    console.log("kire")
+    try {
+        const res = await axiosInstance.get("user/topUsers");
+        return res.data.data || [];
+    } catch (err) {
+        const message = getErrorMessage(err);
+        return message
+    }
+};

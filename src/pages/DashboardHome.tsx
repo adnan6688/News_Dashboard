@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ctrApi, recentAddedvideoapi, recentBannarApi, recentFiveUsersapi, userAnalyticsApi, userInfoCoutnapi } from "../api/newsapi";
+import { ctrApi, recentAddedvideoapi, recentBannarApi, recentFiveUsersapi, topusersapi, userAnalyticsApi, userInfoCoutnapi } from "../api/newsapi";
 import {
     Newspaper,
     Users,
@@ -15,6 +15,7 @@ import Breakingnews from "./Breakingnews";
 import VideosCard from "../Components/VideosCard";
 import Bannars from "../Components/Bannars";
 import CtrAnalyticsList from "../Components/CtrAnalyticsList";
+import TopUsers from "../Components/TopUsers";
 
 
 
@@ -63,8 +64,14 @@ export default function DashboardHome() {
         retry: false,
         refetchOnWindowFocus: false,
     })
+    const { data: topusersData, isLoading: topusersLoading } = useQuery({
+        queryKey: ['topusers-info'],
+        queryFn: topusersapi,
+        retry: false,
+        refetchOnWindowFocus: false,
+    })
 
-    console.log(ctrData?.data)
+    console.log(topusersData)
 
 
     return (
@@ -103,7 +110,7 @@ export default function DashboardHome() {
                 />
 
                 <StatsCard
-                    title="Authenticated"
+                    title="Authenticated Users"
                     count={userCount?.data?.authencticateUser || 0}
                     icon={ShieldCheck}
                     iconColor="text-emerald-600"
@@ -147,13 +154,30 @@ export default function DashboardHome() {
 
                 {/* Recent Users Section */}
                 <div className="w-full lg:w-2/5  rounded-xl  ">
+              
                     <Recent users={recenUsers?.data} />
                 </div>
             </div>
 
-
             <div className="my-4">
-                <CtrAnalyticsList data={ctrData?.data}></CtrAnalyticsList>
+                <div className="flex flex-col sm:flex-row gap-4">
+
+                    {/* Box 1 */}
+                    <div className="w-full sm:w-1/2 bg-white rounded-xl ">
+                       
+                        {!topusersLoading && topusersData?.length > 0 ? (
+                            <TopUsers data={topusersData || []} />
+                        ) : (
+                            <p className="text-gray-400 text-sm">Loading top users...</p>
+                        )}
+                    </div>
+
+                    {/* Box 2 */}
+                    <div className="w-full sm:w-1/2 bg-sky-50 shadow p-3 rounded-xl ">
+                        <CtrAnalyticsList data={ctrData?.data || []} />
+                    </div>
+
+                </div>
             </div>
 
 
@@ -221,7 +245,6 @@ export default function DashboardHome() {
 
             <div className="my-4">
                 <Bannars banners={bannarsData?.data} isLoading={BannarLoading} />
-
             </div>
 
         </div>
