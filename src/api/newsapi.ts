@@ -155,7 +155,8 @@ export const recentBannarApi = async () => {
 
 // ctr 
 type IParams = {
-    limit?: number
+    limit?: number,
+    page?: number
 }
 export const ctrApi = async (limit: number) => {
 
@@ -188,7 +189,7 @@ export const ctrApi = async (limit: number) => {
 // top users
 
 export const topusersapi = async () => {
-    console.log("kire")
+
     try {
         const res = await axiosInstance.get("user/topUsers");
         return res.data.data || [];
@@ -197,3 +198,32 @@ export const topusersapi = async () => {
         return message
     }
 };
+
+
+// videos 
+
+export const videosApi = async (limit?: number, page?: number) => {
+    const params: IParams = {}
+
+    if (limit) {
+        params.limit = limit
+    } else {
+        params.limit = 10
+    }
+
+    if (page) {
+        params.page = page
+    } else {
+        params.page = 1
+    }
+
+    try {
+        const res = await axiosInstance.get('/video/getvideos')
+        return res?.data?.data || []
+    }
+    catch (err) {
+        const message = getErrorMessage(err)
+
+        return message
+    }
+}
