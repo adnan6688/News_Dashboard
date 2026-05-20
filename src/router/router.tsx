@@ -5,6 +5,9 @@ import DashboardHome from "../pages/DashboardHome";
 import Users from "../pages/Users";
 import PrivetRoutes from "./PrivetRoutes";
 import Categories from "../pages/Categories";
+import Videos from "../pages/Videos";
+import BannarsPage from "../pages/BannarsPage";
+import Newspage from "../pages/Newspage";
 
 
 
@@ -27,6 +30,15 @@ export const router = createBrowserRouter([
             } , {
                 path : 'categories',
                 element : <Categories></Categories>
+            }, {
+                path :'videos',
+                element : <Videos></Videos>
+            }, {
+                path : "bannars",
+                element : <BannarsPage></BannarsPage>
+            }, {
+                path : 'news',
+                element : <Newspage></Newspage>
             }
         ]
     }

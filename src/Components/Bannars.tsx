@@ -1,3 +1,7 @@
+import { useMutation } from "@tanstack/react-query";
+import { Trash2 } from "lucide-react";
+import { deleteBannarApi } from "../api/newsapi";
+import Toast from "../Toast/Toast";
 
 export type BannerItem = {
   _id: string;
@@ -12,10 +16,37 @@ export type BannerItem = {
 interface BannersProps {
   banners: BannerItem[];
   isLoading?: boolean;
+  type?: 'bannar' | 'dashboard',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  refetch?: () => Promise<any>
 }
 
-export default function Bannars({ banners, isLoading }: BannersProps) {
-  
+export default function Bannars({ banners, isLoading, type, refetch }: BannersProps) {
+
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: (id: string) => deleteBannarApi(id),
+
+    onSuccess: (data) => {
+      if (refetch) {
+        refetch();
+      }
+
+      if (data?.success) {
+        Toast({
+          type: "success",
+          message: data?.message,
+        });
+      }
+    },
+
+    onError: () => {
+      console.log("error occured");
+    },
+  });
+
+
+
 
   if (isLoading) {
     return (
@@ -30,8 +61,8 @@ export default function Bannars({ banners, isLoading }: BannersProps) {
 
   return (
     <div className=" bg-transparent">
-      
-      {/* সেকশন হেডার টাইটেল */}
+
+
       <div className="flex items-center gap-2.5 mb-5">
         <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl border border-indigo-100 shadow-sm">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -44,74 +75,127 @@ export default function Bannars({ banners, isLoading }: BannersProps) {
         </div>
       </div>
 
-      {/* ব্যানার গ্রিড লেআউট (বড় স্ক্রিনে পাশাপাশি, মোবাইলে নিচে নিচে) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <button className="my-2" disabled={isPending}>
+        {isPending && (
+          <span className="flex items-center gap-2">
+            <span className=" border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            Deleting...
+          </span>
+        )}
+      </button>
+
+
+      <div className={`grid grid-cols-1 md:grid-cols-2 ${type == 'bannar' ? 'lg:grid-cols-4' : 'lg:grid-cols-3'}  gap-6`}>
         {banners && banners.length > 0 ? (
           banners.map((banner, index) => (
-            <div 
+            <div
               key={banner._id || index}
-              className="flex flex-col bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 overflow-hidden group cursor-pointer"
+              className="relative flex flex-col bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group cursor-pointer"
             >
-              {/* ব্যানার ইমেজ এরিয়া (১৬:৯ অ্যাসপেক্ট রেশিও) */}
+              {/* Delete Button */}
+              <button
+
+                className="
+    absolute top-3 left-3 z-20
+    flex items-center justify-center
+    w-10 h-10
+    rounded-xl
+    bg-white/90 backdrop-blur-md
+    border border-red-100
+    text-red-500
+    shadow-md
+    opacity-0 scale-75 -translate-y-2
+    group-hover:opacity-100 
+    group-hover:scale-100 
+    group-hover:translate-y-0
+    hover:bg-red-500
+    hover:text-white
+    hover:border-red-500
+    transition-all duration-300 ease-out
+  "
+                onClick={() => mutate(banner?._id)}
+              >
+                <Trash2 size={18} strokeWidth={2.2} />
+              </button>
+
+              {/* Image */}
               <div className="w-full aspect-video overflow-hidden relative bg-slate-50 border-b border-slate-50">
-                <img 
-                  src={banner.image} 
-                  alt={banner.title} 
-                  className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-550 ease-out"
+                <img
+                  src={banner.image}
+                  alt={banner.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                   onError={(e) => {
-                    // ইমেজ ইউআরএল ব্রোকেন হলে ব্যাকআপ হিসেবে এই প্লেসহোল্ডার দেখাবে
-                    (e.target as HTMLImageElement).src = 'https://placehold.co/600x337?text=Banner+Image';
+                    (e.target as HTMLImageElement).src =
+                      "https://placehold.co/600x337?text=Banner+Image";
                   }}
                 />
-                {/* রানিং বা লাইভ পালস ব্যাজ */}
+
+                {/* Active Badge */}
                 <span className="absolute top-3 right-3 inline-flex items-center bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-sm uppercase tracking-wider gap-1">
                   <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
                   Active
                 </span>
               </div>
 
-              {/* টেক্সট এবং মিডিয়া ডিটেইলস পার্ট */}
-              <div className="p-4 flex flex-col justify-between flex-grow bg-gradient-to-b from-white to-slate-50/20">
+              {/* Content */}
+              <div className="p-4 flex flex-col justify-between grow bg-linear-to-b from-white to-slate-50/20">
                 <div className="space-y-2">
-                  {/* টাইটেল */}
-                  <h3 className="text-sm font-bold text-slate-800 line-clamp-2 leading-snug tracking-tight group-hover:text-indigo-600 transition-colors duration-200">
+                  {/* Title */}
+                  <h3 className="text-sm font-bold text-slate-800 line-clamp-2 leading-snug tracking-tight group-hover:text-red-600 transition-colors duration-200">
                     {banner.title}
                   </h3>
-                  
-                  {/* সোর্স লিঙ্ক (আইকনসহ) */}
+
+                  {/* Link */}
                   <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium">
-                    <svg className="w-3.5 h-3.5 shrink-0 text-slate-350" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.172l1.54-1.54m6.574-7.062l1.54-1.54a4 4 0 10-5.656-5.656l-4 4a4 4 0 000 5.656" />
+                    <svg
+                      className="w-3.5 h-3.5 shrink-0 text-slate-350"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.172l1.54-1.54m6.574-7.062l1.54-1.54a4 4 0 10-5.656-5.656l-4 4a4 4 0 000 5.656"
+                      />
                     </svg>
-                    <a 
-                      href={banner.link} 
-                      target="_blank" 
-                      rel="noreferrer" 
-                      className="hover:underline hover:text-indigo-500 truncate"
+
+                    <a
+                      href={banner.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:underline hover:text-red-500 truncate"
                     >
                       {banner.link || "No destination URL"}
                     </a>
                   </div>
                 </div>
 
-                {/* নিচে ক্রিয়েশন ডেট */}
+                {/* Footer */}
                 <div className="mt-4 pt-3 border-t border-slate-100/70 flex items-center justify-between text-[11px] text-slate-400 font-medium">
                   <span className="flex items-center gap-1 text-slate-400">
-                    ID: <span className="font-mono text-slate-500 bg-slate-50 px-1 py-0.5 rounded text-[10px]">{banner.publicId?.split('/').pop() || 'N/A'}</span>
+                    ID:
+                    <span className="font-mono text-slate-500 bg-slate-50 px-1 py-0.5 rounded text-[10px]">
+                      {banner.publicId?.split("/").pop() || "N/A"}
+                    </span>
                   </span>
+
                   <span className="text-slate-500">
-                    {banner.createdAt ? new Date(banner.createdAt).toLocaleDateString(undefined, {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric'
-                    }) : 'N/A'}
+                    {banner.createdAt
+                      ? new Date(banner.createdAt).toLocaleDateString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })
+                      : "N/A"}
                   </span>
                 </div>
               </div>
             </div>
           ))
         ) : (
-          /* ডাটা না থাকলে এম্পটি স্টেট */
+
           <div className="col-span-full py-12 text-center bg-white rounded-2xl border border-dashed border-slate-200 text-slate-400 italic font-medium">
             No active banners found at the moment.
           </div>

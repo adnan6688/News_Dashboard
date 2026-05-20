@@ -1,3 +1,9 @@
+import { useMutation } from "@tanstack/react-query";
+import { DeleteVideo } from "../api/newsapi";
+
+import Toast from "../Toast/Toast";
+
+
 type Video = {
   _id: string;
   videoId: string;
@@ -10,6 +16,9 @@ type Video = {
 
 type Props = {
   videos: Video[];
+  type?: "Dashboard" | "Video";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  refetch?: () => Promise<any>;
 };
 
 const formatViews = (views: number) => {
@@ -38,13 +47,36 @@ const timeAgo = (date: string) => {
   return `${days}d ago`;
 };
 
-export default function VideosCard({ videos }: Props) {
+export default function VideosCard({ videos, type, refetch }: Props) {
+
+
+
+
+  const { mutate } = useMutation({
+    mutationFn: (id: string) => DeleteVideo(id),
+
+    onSuccess: (data: { success: boolean; message: string }) => {
+      if (refetch) {
+        refetch()
+      }
+      Toast({
+        type: "success",
+        message: data.message,
+      });
+    },
+
+    onError: (err: Error) => {
+      console.log(err.message);
+    },
+  });
+
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <div className={`grid grid-cols-1 md:grid-cols-2 ${type == 'Video' ? 'xl:grid-cols-4 gap-3' : "xl:grid-cols-3 gap-6"}  `}>
       {videos?.map((video) => (
         <div
           key={video._id}
-          className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition"
+          className="group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition"
         >
           {/* Video */}
           <div className="aspect-video">
@@ -55,6 +87,19 @@ export default function VideosCard({ videos }: Props) {
               allowFullScreen
             />
           </div>
+
+          {/* Overlay */}
+          <div className="pointer-events-none absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+
+          {/* Remove Button */}
+          {
+            type == "Video" && <button
+              onClick={() => mutate(video?._id)}
+              className="absolute top-3 right-3 cursor-pointer z-20 opacity-0 group-hover:opacity-100 transition duration-300 px-4 py-1.5 bg-red-500 hover:bg-red-600 text-white text-sm rounded-full shadow-lg"
+            >
+              Remove
+            </button>
+          }
 
           {/* Content */}
           <div className="p-4">

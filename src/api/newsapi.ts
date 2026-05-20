@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axiosInstance from "../BaseUrl/baseurl"
 import { getErrorMessage } from "../Utils/errorMessage"
 
@@ -201,29 +202,194 @@ export const topusersapi = async () => {
 
 
 // videos 
-
 export const videosApi = async (limit?: number, page?: number) => {
-    const params: IParams = {}
+    const params: IParams = {};
 
-    if (limit) {
-        params.limit = limit
-    } else {
-        params.limit = 10
-    }
-
-    if (page) {
-        params.page = page
-    } else {
-        params.page = 1
-    }
+    params.limit = limit ?? 10;
+    params.page = page ?? 1;
 
     try {
-        const res = await axiosInstance.get('/video/getvideos')
-        return res?.data?.data || []
+        const res = await axiosInstance.get('/video/getvideos', {
+            params,
+        });
+
+        return {
+            totalPage: res?.data?.meta?.totalpage,
+            data: res?.data?.data || [],
+        };
+    } catch (err) {
+        const message = getErrorMessage(err);
+
+        throw new Error(message, {
+            cause: err,
+        });
+    }
+};
+
+// delete video
+export const DeleteVideo = async (id: string) => {
+    try {
+        const res = await axiosInstance.delete(`/video/delete-video/${id}`);
+
+        return res.data;
+
+    } catch (err) {
+        const message = getErrorMessage(err);
+
+        throw new Error(message, {
+            cause: err,
+        });
+    }
+};
+
+
+// add video
+export const UploadVideo = async (link: string) => {
+
+    try {
+        const res = await axiosInstance.post('/video/upload-video', { videoUrl: link })
+        return {
+            success: true,
+            message: res?.data?.message
+        }
     }
     catch (err) {
         const message = getErrorMessage(err)
 
-        return message
+        return {
+            success: false,
+            message
+        }
     }
 }
+
+
+
+// admin bannars
+export const adminBannarsapi = async (limit?: number, page?: number) => {
+
+    const params: IParams = {}
+    if (limit) {
+        params.limit = limit
+    }
+    if (page) {
+        params.page = page
+    } try {
+        const res = await axiosInstance.get('/bannar/adminBannars', {
+            params,
+        });
+
+        return {
+            totalPage: res?.data?.meta?.totalpage,
+            data: res?.data?.data || [],
+        };
+    } catch (err) {
+        const message = getErrorMessage(err);
+
+        throw new Error(message, {
+            cause: err,
+        });
+    }
+
+
+}
+
+
+
+
+// upload bannar
+
+export const uploadBannarapi = async (data: { title: string; link: string; file: File; }) => {
+    try {
+        const formData = new FormData();
+
+        formData.append("title", data.title);
+        formData.append("link", data.link);
+        formData.append("file", data.file);
+
+        const res = await axiosInstance.post("/bannar/bannar-create", formData, {
+            headers: { "Content-Type": "multipart/form-data", },
+        });
+        return res.data;
+    } catch (err) {
+        const message = getErrorMessage(err)
+
+        throw new Error(message, {
+            cause: err,
+        });
+    }
+};
+
+
+
+
+// news
+export const getNewsApi = async (limit?: number, page?: number) => {
+
+    const params: IParams = {}
+    if (limit) {
+        params.limit = limit
+    }
+    if (page) {
+        params.page = page
+    } try {
+        const res = await axiosInstance.get('/news/admin_all_news', {
+            params,
+        });
+
+        return {
+            data: res?.data?.data || {},
+        };
+    } catch (err) {
+        const message = getErrorMessage(err);
+
+        throw new Error(message, {
+            cause: err,
+        });
+    }
+
+
+}
+
+
+
+type Author = {
+    name: string;
+    image: string;
+};
+
+export type NewsItem = {
+    _id: string;
+    id: number;
+    title: string;
+    description: string;
+    image: string;
+    category: string[];
+    categorySlugs: string[];
+    author: Author;
+    link: string;
+    clicks: number;
+    impressions: number;
+    ctr: number;
+    views?: number;
+};
+
+
+
+// delete bannar
+export const deleteBannarApi = async (id: string) => {
+  try {
+    const res = await axiosInstance.delete(`/bannar/delete-bannar/${id}`);
+
+    return {
+      success: true,
+      message: res?.data?.message || "Banner deleted successfully",
+      data: res?.data?.data,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: "Failed to delete banner",
+    };
+  }
+};

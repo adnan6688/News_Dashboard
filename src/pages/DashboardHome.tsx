@@ -16,11 +16,12 @@ import VideosCard from "../Components/VideosCard";
 import Bannars from "../Components/Bannars";
 import CtrAnalyticsList from "../Components/CtrAnalyticsList";
 import TopUsers from "../Components/TopUsers";
+import { Link } from "react-router";
 
 
 
 export default function DashboardHome() {
-
+   
     const [yearInfo, setYearInfo] = useState<number>(new Date().getFullYear())
 
     const { data: userCount } = useQuery({
@@ -52,7 +53,7 @@ export default function DashboardHome() {
     })
 
 
-    const { data: bannarsData, isLoading: BannarLoading } = useQuery({
+    const { data: bannarsData, isLoading: BannarLoading  } = useQuery({
         queryKey: ['recentBannar'],
         queryFn: recentBannarApi, retry: false,
         refetchOnWindowFocus: false,
@@ -71,7 +72,8 @@ export default function DashboardHome() {
         refetchOnWindowFocus: false,
     })
 
-    console.log(topusersData)
+
+
 
 
     return (
@@ -154,7 +156,7 @@ export default function DashboardHome() {
 
                 {/* Recent Users Section */}
                 <div className="w-full lg:w-2/5  rounded-xl  ">
-              
+
                     <Recent users={recenUsers?.data} />
                 </div>
             </div>
@@ -164,7 +166,7 @@ export default function DashboardHome() {
 
                     {/* Box 1 */}
                     <div className="w-full sm:w-1/2 bg-white rounded-xl ">
-                       
+
                         {!topusersLoading && topusersData?.length > 0 ? (
                             <TopUsers data={topusersData || []} />
                         ) : (
@@ -181,7 +183,7 @@ export default function DashboardHome() {
             </div>
 
 
-            <div className=" bg-transparent">
+            <div className=" bg-transparent my-5">
 
                 <div className="flex items-center justify-between gap-4 mb-4">
 
@@ -203,48 +205,53 @@ export default function DashboardHome() {
                     </div>
 
 
-                    <button
-                        onClick={() => {/* আপনার রাউটিং বা ফাংশন এখানে দিন */ }}
-                        className="relative flex items-center gap-1.5 py-1 text-sm text-red-500 uppercase cursor-pointer shrink-0 group transition-all duration-300"
-                    >
+                    <Link to={'/dashboard/videos'}>
+                        <button
 
-                        <span>View All</span>
+                            className="relative flex items-center gap-1.5 py-1 text-sm text-red-500 uppercase cursor-pointer shrink-0 group transition-all duration-300"
+                        >
 
-
-                        <div className="relative w-4 h-4 overflow-hidden">
-                            <svg
-                                className="w-4 h-4 absolute inset-0 transform -translate-x-1 opacity-70 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-red-600 transition-all duration-300 ease-out"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth="3"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                        </div>
+                            <span>View All</span>
 
 
-                        <span className="absolute bottom-0 left-1/2 w-0  h-0.5  bg-red-500 transition-all duration-300 ease-out group-hover:w-full group-hover:left-0" />
-                    </button>
+                            <div className="relative w-4 h-4 overflow-hidden">
+                                <svg
+                                    className="w-4 h-4 absolute inset-0 transform -translate-x-1 opacity-70 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-red-600 transition-all duration-300 ease-out"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth="3"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </div>
+
+
+                            <span className="absolute bottom-0 left-1/2 w-0  h-0.5  bg-red-500 transition-all duration-300 ease-out group-hover:w-full group-hover:left-0" />
+                        </button></Link>
 
                 </div>
 
                 <div>
                     {VideoLoading ? (
-
                         <div className="flex items-center gap-3 p-6 bg-white rounded-2xl border border-slate-100 shadow-sm text-slate-500 font-medium">
                             <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
                             <span>Loading videos...</span>
                         </div>
+                    ) : recentVideoData?.data?.length > 0 ? (
+                        <VideosCard videos={recentVideoData?.data} type="Dashboard" />
                     ) : (
-                        <VideosCard videos={recentVideoData?.data} />
+                        <div className="flex flex-col items-center justify-center p-10 text-slate-700">
+                            <p className="text-lg ">No videos found 😕</p>
+                            <span className="text-sm mt-1">Try adding some videos first</span>
+                        </div>
                     )}
                 </div>
             </div>
 
 
             <div className="my-4">
-                <Bannars banners={bannarsData?.data} isLoading={BannarLoading} />
+                <Bannars  banners={bannarsData?.data} isLoading={BannarLoading} />
             </div>
 
         </div>
