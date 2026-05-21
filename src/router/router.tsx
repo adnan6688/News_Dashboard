@@ -4,10 +4,10 @@ import DashboardLayout from "../pages/DashboardLayout";
 import DashboardHome from "../pages/DashboardHome";
 import Users from "../pages/Users";
 import PrivetRoutes from "./PrivetRoutes";
-import Categories from "../pages/Categories";
 import Videos from "../pages/Videos";
 import BannarsPage from "../pages/BannarsPage";
 import Newspage from "../pages/Newspage";
+import Settings from "../pages/Settings";
 
 
 
@@ -27,18 +27,19 @@ export const router = createBrowserRouter([
             }, {
                 path: 'users',
                 element: <Users></Users>
-            } , {
-                path : 'categories',
-                element : <Categories></Categories>
             }, {
-                path :'videos',
-                element : <Videos></Videos>
+                path: 'videos',
+                element: <Videos></Videos>
             }, {
-                path : "bannars",
-                element : <BannarsPage></BannarsPage>
+                path: "bannars",
+                element: <BannarsPage></BannarsPage>
             }, {
-                path : 'news',
-                element : <Newspage></Newspage>
+                path: 'news',
+                element: <Newspage></Newspage>
+            }, 
+            {
+                path  : 'settings',
+                element : <Settings></Settings>
             }
         ]
     }

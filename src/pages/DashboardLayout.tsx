@@ -1,20 +1,39 @@
 import { useState } from "react";
-import { Outlet, NavLink, useLocation } from "react-router";
+import { Outlet, NavLink, useLocation, useNavigate } from "react-router";
 import logo from './../assets/WhatsApp_Image_2026-05-12_at_9.52.35_AM__1_-removebg-preview.png'
+import { useMutation } from "@tanstack/react-query";
+import { logoutUserapi } from "../api/newsapi";
+import Toast from "../Toast/Toast";
 
 export default function DashboardLayout() {
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate()
 
     const menu = [
         { name: "Home", path: "/dashboard" },
         { name: "Users", path: "/dashboard/users" },
-        { name: "Categories", path: "/dashboard/categories" },
         { name: "Videos", path: "/dashboard/videos" },
         { name: "Bannar", path: "/dashboard/bannars" },
         { name: "News", path: "/dashboard/news" },
         { name: "Settings", path: "/dashboard/settings" }
     ];
     const useLocaion = useLocation()
+
+
+    const { mutate } = useMutation({
+        mutationFn: logoutUserapi,
+
+        onSuccess: (data) => {
+            Toast({ type: 'success', message: data?.message })
+            navigate("/");
+        },
+
+        onError: (error) => {
+            console.log("Logout failed", error);
+            // toast.error(error?.response?.data?.message || "Something went wrong");
+        },
+    });
+
 
 
 
@@ -42,6 +61,17 @@ export default function DashboardLayout() {
                         </NavLink>
                     ))}
                 </nav>
+
+
+                <button
+                    onClick={() => mutate()}
+                    className="px-6 py-2 text-white m-4 font-medium rounded-full 
+  bg-linear-to-r from-red-700 via-red-800 to-red-900 
+  hover:from-red-600 hover:to-red-700 
+  transition-all duration-300 shadow-md hover:shadow-lg"
+                >
+                    Logout
+                </button>
             </aside>
 
             {/* Mobile Sidebar (Always rendered for smooth transition) */}
@@ -98,9 +128,9 @@ export default function DashboardLayout() {
                 <header className="w-full bg-white border-b border-slate-100 flex items-center px-4 md:px-8 py-4 shrink-0 z-10">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-3">
 
-                       
+
                         <div className="flex items-start gap-1 sm:gap-0">
-                       
+
                             <button
                                 className="md:hidden mr-3 text-2xl p-1.5 text-slate-600 hover:bg-slate-50 border border-slate-100 rounded-xl transition-colors mt-1"
                                 onClick={() => setOpen(true)}

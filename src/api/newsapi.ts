@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import axiosInstance from "../BaseUrl/baseurl"
+
+import type { UserType } from "../pages/Settings"
 import { getErrorMessage } from "../Utils/errorMessage"
 
 
@@ -157,7 +159,9 @@ export const recentBannarApi = async () => {
 // ctr 
 type IParams = {
     limit?: number,
-    page?: number
+    page?: number,
+    role?: string,
+    search?: string
 }
 export const ctrApi = async (limit: number) => {
 
@@ -378,18 +382,137 @@ export type NewsItem = {
 
 // delete bannar
 export const deleteBannarApi = async (id: string) => {
-  try {
-    const res = await axiosInstance.delete(`/bannar/delete-bannar/${id}`);
+    try {
+        const res = await axiosInstance.delete(`/bannar/delete-bannar/${id}`);
 
-    return {
-      success: true,
-      message: res?.data?.message || "Banner deleted successfully",
-      data: res?.data?.data,
-    };
-  } catch (err) {
-    return {
-      success: false,
-      message: "Failed to delete banner",
-    };
-  }
+        return {
+            success: true,
+            message: res?.data?.message || "Banner deleted successfully",
+            data: res?.data?.data,
+        };
+    } catch (err) {
+        return {
+            success: false,
+            message: "Failed to delete banner",
+        };
+    }
+};
+
+
+
+
+// all users
+export const getAllUsersApi = async (limit?: number, page?: number, role?: string, search?: string) => {
+
+    const params: IParams = {}
+    if (limit) {
+        params.limit = limit
+    }
+    if (page) {
+        params.page = page
+    }
+    if (role !== 'All') {
+        params.role = role
+    }
+    if (search) {
+        params.search = search
+    }
+
+    try {
+        const result = await axiosInstance.get('/user/get-all-users', { params })
+
+        return {
+            data: result?.data?.data?.data || [],
+            meta: {
+                totalpage: result?.data?.data?.totalpage,
+                totalUsers: result?.data?.data?.totalUsers,
+                page: result?.data?.data?.page
+            }
+        }
+    } catch (err) {
+        return {
+            success: false,
+            message: "Failed to get all users",
+        };
+    }
+
+}
+
+
+export type TUser = {
+    _id: string;
+    name: string;
+    email: string;
+    role: "USER" | "GUEST" | "ADMIN";
+    isDelete: boolean;
+    birth_date: string;
+    image: string;
+
+    clicks: number;
+    impressions: number;
+    total: number;
+
+    installCount: number;
+    uninstallCount: number;
+};
+
+
+
+export const logoutUserapi = async () => {
+
+    try {
+        await axiosInstance.post(`/user/logout`)
+        return {
+            success: true,
+            message: "Logout successfully!"
+        }
+
+    }
+    catch (err) {
+        return {
+            success: false,
+            message: "Failed to delete banner",
+        };
+    }
+}
+
+
+
+export const updateUserapi = async (payload: UserType) => {
+    try {
+        const formData = new FormData();
+
+        // append normal fields
+        formData.append("name", payload.name);
+
+        formData.append("birth_date", payload.birth_date);
+
+
+        // handle image (IMPORTANT)
+        if (payload.image instanceof File) {
+            formData.append("file", payload.image);
+        }
+
+        const res = await axiosInstance.patch(
+            "/user/updateinformation",
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
+
+        console.log(res, "response");
+
+        return {
+            success: true,
+            message: "updated",
+        };
+    } catch (err) {
+        return {
+            success: false,
+            message: "Not update",
+        };
+    }
 };

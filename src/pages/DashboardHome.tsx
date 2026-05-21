@@ -59,6 +59,7 @@ export default function DashboardHome() {
         refetchOnWindowFocus: false,
     })
 
+    
     const { data: ctrData, isLoading: ctrLoading } = useQuery({
         queryKey: ['ctr'],
         queryFn: () => ctrApi(5),
@@ -71,6 +72,7 @@ export default function DashboardHome() {
         retry: false,
         refetchOnWindowFocus: false,
     })
+    console.log(ctrLoading)
 
 
 

@@ -93,9 +93,10 @@ export default function Bannars({ banners, isLoading, type, refetch }: BannersPr
               className="relative flex flex-col bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group cursor-pointer"
             >
               {/* Delete Button */}
-              <button
+              {
+                type == "bannar" && <button
 
-                className="
+                  className="
     absolute top-3 left-3 z-20
     flex items-center justify-center
     w-10 h-10
@@ -113,10 +114,11 @@ export default function Bannars({ banners, isLoading, type, refetch }: BannersPr
     hover:border-red-500
     transition-all duration-300 ease-out
   "
-                onClick={() => mutate(banner?._id)}
-              >
-                <Trash2 size={18} strokeWidth={2.2} />
-              </button>
+                  onClick={() => mutate(banner?._id)}
+                >
+                  <Trash2 size={18} strokeWidth={2.2} />
+                </button>
+              }
 
               {/* Image */}
               <div className="w-full aspect-video overflow-hidden relative bg-slate-50 border-b border-slate-50">

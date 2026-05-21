@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { getNewsApi, type NewsItem } from "../api/newsapi"
+import { getNewsApi } from "../api/newsapi"
 import Loader from "../Components/Loader"
 import NewsCard from "../Components/NewsCard"
 import Pagination from "../Components/Pagination"
