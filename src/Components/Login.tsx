@@ -140,6 +140,9 @@ function Login() {
           {/* forgot */}
           <div className="flex justify-end">
             <button
+              onClick={() => {
+                navigate('/forget-password')
+              }}
               type="button"
               className="text-sm font-medium text-[#DC0000] hover:underline"
             >
@@ -151,7 +154,7 @@ function Login() {
           <button
             type="submit"
 
-            className="w-full rounded-xl bg-[#1E466E] hover:bg-[#1E466E] transition-all duration-300 py-4 text-white  text-lg shadow-lg disabled:opacity-60"
+            className="w-full cursor-pointer rounded-xl bg-[#1E466E] hover:bg-[#1E466E] transition-all duration-300 py-4 text-white  text-lg shadow-lg disabled:opacity-60"
           >
             {loginLoad ? 'loading....' : "Sign In"}
           </button>

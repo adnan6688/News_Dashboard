@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Camera } from "lucide-react";
 import { useAuth } from "../Hook/useAuth";
-import { updateUserapi } from "../api/newsapi";
+import { changePassword, updateUserapi } from "../api/newsapi";
 import Toast from "../Toast/Toast";
+import { PasswordInput } from "../Components/PasswordInput";
+import { getErrorMessage } from "../Utils/errorMessage";
 
 export type UserType = {
     birthDayNotification: boolean;
@@ -43,6 +45,9 @@ export default function Settings() {
     const fileRef = useRef<HTMLInputElement | null>(null);
     const [user, setUser] = useState<UserType>(initialData);
 
+    const [currentPassword, setCurrentPassword] = useState<string | ''>('')
+    const [newPassword, setNewPassword] = useState<string | ''>('')
+    const [confirmPassword, setConfirmPassword] = useState<string | ''>('')
 
     const [preview, setPreview] = useState<string | null>(
         typeof information?.image === "string" ? information.image : null
@@ -80,11 +85,11 @@ export default function Settings() {
         e.preventDefault();
         try {
             const result = await updateUserapi(user)
-    
+
             if (result?.success) {
                 Toast({ type: 'success', message: 'Profile Update Successfully!' })
                 refetchUser()
-  
+
             }
         } catch (err) {
             Toast({ type: 'error', message: 'Profile Not update!' })
@@ -95,13 +100,76 @@ export default function Settings() {
 
     };
 
+
+    const passwordHandle = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        try {
+
+            // empty check
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                return Toast({
+                    type: "error",
+                    message: "All fields are required!",
+                });
+            }
+
+            // current & new password same
+            if (currentPassword === newPassword) {
+                return Toast({
+                    type: "error",
+                    message: "Current password and new password cannot be the same!",
+                });
+            }
+
+            // confirm password check
+            if (newPassword !== confirmPassword) {
+                return Toast({
+                    type: "error",
+                    message: "New password and confirm password do not match!",
+                });
+            }
+
+            // password length check
+            if (newPassword.length < 6) {
+                return Toast({
+                    type: "error",
+                    message: "Password must be at least 6 characters!",
+                });
+            }
+
+
+            const result = await changePassword({ currentPassword, newPassword, confirmPassword })
+            if (result?.success) {
+                Toast({
+                    type: "success",
+                    message: result?.message,
+                });
+            }
+
+
+        } catch (err) {
+            const message = getErrorMessage(err)
+            Toast({
+                type: "error",
+                message: message,
+            });
+        }
+    };
+
+
+
+
     return (
-        <div className="flex items-center justify-center bg-gray-50 p-4">
-            <div className="w-full max-w-2xl bg-white shadow-lg rounded-2xl p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 p-3 bg-gray-50">
+
+            {/* Profile Card */}
+            <div className="w-full bg-white border border-gray-100 shadow-sm rounded-xl p-4 max-w-md mx-auto">
 
                 {/* Avatar */}
                 <div className="flex flex-col items-center">
-                    <div className="relative w-28 h-28">
+                    <div className="relative w-20 h-20">
+
                         <img
                             src={
                                 preview ||
@@ -110,15 +178,15 @@ export default function Settings() {
                                     : "https://i.ibb.co/2nYyQ2v/default-avatar.png")
                             }
                             alt="profile"
-                            className="w-28 h-28 rounded-full object-cover"
+                            className="w-20 h-20 rounded-full object-cover border border-blue-950/20"
                         />
 
                         <button
                             type="button"
                             onClick={() => fileRef.current?.click()}
-                            className="absolute bottom-1 right-1 bg-black text-white p-2 rounded-full hover:bg-gray-800"
+                            className="absolute bottom-0 right-0 bg-blue-950 text-white p-1.5 rounded-full"
                         >
-                            <Camera size={16} />
+                            <Camera size={12} />
                         </button>
 
                         <input
@@ -130,40 +198,50 @@ export default function Settings() {
                         />
                     </div>
 
-                    <h2 className="mt-3 text-xl font-semibold">
+                    <h2 className="mt-2 text-base font-semibold text-gray-800">
                         {information?.name}
                     </h2>
-                    <p className="text-sm text-gray-500">
+
+                    <p className="text-[11px] text-gray-500">
                         {information?.email}
                     </p>
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+                <form onSubmit={handleSubmit} className="mt-5 space-y-3">
 
                     <div>
-                        <label className="text-sm">Name</label>
+                        <label className="text-xs text-gray-600 font-medium">
+                            Name
+                        </label>
+
                         <input
                             name="name"
                             defaultValue={information?.name ?? ""}
                             onChange={handleChange}
-                            className="w-full p-2 rounded-lg "
+                            placeholder="Enter your name"
+                            className="w-full mt-1 px-3 py-2 text-sm rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-blue-950"
                         />
                     </div>
 
                     <div>
-                        <label className="text-sm">Email</label>
+                        <label className="text-xs text-gray-600 font-medium">
+                            Email
+                        </label>
+
                         <input
                             name="email"
                             disabled
                             value={user.email}
-                            onChange={handleChange}
-                            className="w-full p-2 rounded-lg "
+                            className="w-full mt-1 px-3 py-2 text-sm rounded-lg border border-gray-200 bg-gray-100 text-gray-500"
                         />
                     </div>
 
                     <div>
-                        <label className="text-sm">Birth Date</label>
+                        <label className="text-xs text-gray-600 font-medium">
+                            Birth Date
+                        </label>
+
                         <input
                             type="date"
                             name="birth_date"
@@ -173,17 +251,68 @@ export default function Settings() {
                                     : ""
                             }
                             onChange={handleChange}
-                            className="w-full p-2 rounded-lg "
+                            className="w-full mt-1 px-3 py-2 text-sm rounded-lg border border-gray-200 outline-none focus:ring-1 focus:ring-blue-950"
                         />
                     </div>
 
                     <button
                         type="submit"
                         disabled={load}
-                        className={`w-full bg-black text-white py-2 rounded-lg transition ${load ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-800 cursor-pointer"
+                        className={`w-full py-2 rounded-lg text-sm text-white font-medium transition
+                ${load
+                                ? "bg-blue-950/50 cursor-not-allowed"
+                                : "bg-blue-950 hover:opacity-90"
                             }`}
                     >
-                        {load ? "Updating..." : "Update Profile"}
+                        {load ? "Updating..." : "Update"}
+                    </button>
+                </form>
+            </div>
+
+            {/* Password Card */}
+            <div className="w-full bg-white border border-gray-100 shadow-sm rounded-xl p-4 max-w-md mx-auto">
+
+                <div className="mb-4">
+                    <h2 className="text-base font-semibold text-gray-800">
+                        Change Password
+                    </h2>
+
+                    <p className="text-[11px] text-gray-500 mt-1">
+                        Keep your account secure.
+                    </p>
+                </div>
+
+                <form onSubmit={passwordHandle} className="space-y-3">
+
+                    <PasswordInput
+                        label="Current Password"
+                        name="current_password"
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        placeholder="Current password"
+                    />
+
+                    <PasswordInput
+                        label="New Password"
+                        name="new_password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        placeholder="New password"
+                    />
+
+                    <PasswordInput
+                        label="Confirm Password"
+                        name="confirm_password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="Confirm password"
+                    />
+
+                    <button
+                        type="submit"
+                        className="w-full bg-blue-950 text-white py-2 rounded-lg text-sm font-medium hover:opacity-90 transition"
+                    >
+                        Change Password
                     </button>
                 </form>
             </div>

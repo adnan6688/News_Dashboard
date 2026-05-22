@@ -8,6 +8,9 @@ import Videos from "../pages/Videos";
 import BannarsPage from "../pages/BannarsPage";
 import Newspage from "../pages/Newspage";
 import Settings from "../pages/Settings";
+import ForgetPassword from "../Components/ForgetPassword";
+import OtpPage from "../Components/OtpPage";
+import ResetPassword from "../Components/Resetpassword";
 
 
 
@@ -15,6 +18,15 @@ export const router = createBrowserRouter([
     {
         path: '/',
         element: <Login></Login>
+    }, {
+        path: '/forget-password',
+        element: <ForgetPassword />
+    }, {
+        path: '/otp-page/:email',
+        element: <OtpPage />
+    }, {
+        path: '/reset-password/:email',
+        element: <ResetPassword />
     }, {
         path: '/dashboard',
         element: <PrivetRoutes>
@@ -36,10 +48,10 @@ export const router = createBrowserRouter([
             }, {
                 path: 'news',
                 element: <Newspage></Newspage>
-            }, 
+            },
             {
-                path  : 'settings',
-                element : <Settings></Settings>
+                path: 'settings',
+                element: <Settings></Settings>
             }
         ]
     }

@@ -516,3 +516,42 @@ export const updateUserapi = async (payload: UserType) => {
         };
     }
 };
+
+
+export const changePassword = async ({ currentPassword, newPassword, confirmPassword }: { currentPassword: string, newPassword: string, confirmPassword: string }) => {
+
+    try {
+
+        const result = await axiosInstance.post(`/password/changePassword`, { currentPassword, newPassword, confirmPassword })
+
+        return {
+            success: true,
+            message: result?.data?.message
+        }
+    } catch (err) {
+        const message = getErrorMessage(err);
+
+        throw new Error(message, {
+            cause: err,
+        });
+    }
+
+}
+
+
+export const sendEmail = async (email: string) => {
+
+    const res = await axiosInstance.post('/password/forgetPassword', { email })
+    return res?.data
+}
+
+export const verifyOTp = async (email: string, otp: string) => {
+
+    const result = await axiosInstance.post(`/password/verify-password`, { email, otp })
+    return result?.data
+}
+
+export const updatepasswordapi = async (email: string, password: string) => {
+    const res = await axiosInstance.post('/password/reset-password', { email, password })
+    return res?.data
+}
