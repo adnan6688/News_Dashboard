@@ -12,11 +12,14 @@ interface Props {
 
 const AuthProvider = ({ children }: Props) => {
 
+
+    
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { data, isLoading, refetch, } = useQuery({
         queryKey: ["currentUser"],
         queryFn: async () => {
             const res = await axiosInstance.get("user/getMe");
+            console.log(res, "response")
             return res.data.data;
         },
         staleTime: 1000 * 60 * 5, // 5 min cache

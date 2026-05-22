@@ -22,6 +22,7 @@ function Login() {
   const userLogin = async ({ email, password, }: { email: string; password: string; }) => {
     const result = await loginFn({ email, password, });
 
+    console.log("result",result)
     if (result.success) {
 
       await refetchUser();
