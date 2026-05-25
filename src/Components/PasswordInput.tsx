@@ -1,6 +1,6 @@
 type PasswordInputProps = {
     label: string;
-    name: string;
+    name: string ;
     placeholder: string;
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;

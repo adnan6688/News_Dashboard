@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from "react-router";
 import { useAuth } from "../Hook/useAuth";
 import Toast from "../Toast/Toast";
+import Loader from "../Components/Loader";
 
 type Props = {
     children: React.ReactNode;
@@ -12,7 +13,9 @@ export default function PrivetRoutes({ children }: Props) {
 
 
     if (loading) {
-        return <h1>Loading...</h1>;
+        return <div className="flex justify-center items-center ">
+            <Loader></Loader>
+        </div>;
     }
 
 

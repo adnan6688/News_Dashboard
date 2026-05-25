@@ -1,49 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Camera } from "lucide-react";
 import { useAuth } from "../Hook/useAuth";
 import { changePassword, updateUserapi } from "../api/newsapi";
 import Toast from "../Toast/Toast";
 import { PasswordInput } from "../Components/PasswordInput";
 import { getErrorMessage } from "../Utils/errorMessage";
+import type { IUser } from "../Context/userType";
 
-export type UserType = {
-    birthDayNotification: boolean;
-    birth_date: string;
-    breakingNewsNotification: boolean;
-    createdAt: string;
-    deviceId: null;
-    email: string;
-    image: string | File;
-    isDelete: boolean;
-    name: string;
-    role: string;
-    updatedAt: string;
-    _id: string;
-};
 
-const initialData: UserType = {
-    birthDayNotification: true,
-    birth_date: "2004-12-05T18:00:00.000Z",
-    breakingNewsNotification: true,
-    createdAt: "2026-05-11T10:12:48.328Z",
-    deviceId: null,
-    email: "golamfaruk123@gmail.com",
-    image:
-        "https://res.cloudinary.com/dr9b7k8n7/image/upload/v1779075593/news/jmtrh8iojpity6kjpy9v.jpg",
-    isDelete: false,
-    name: "Golam Faruk Adnan",
-    role: "ADMIN",
-    updatedAt: "2026-05-18T09:29:34.913Z",
-    _id: "6a01aba044d208433bf23505",
-};
+
 
 export default function Settings() {
     const { user: information, refetchUser } = useAuth();
     const [load, setLoad] = useState<boolean>(false)
 
     const fileRef = useRef<HTMLInputElement | null>(null);
-    const [user, setUser] = useState<UserType>(initialData);
+    const [user, setUser] = useState<IUser | null>(() => information)
 
     const [currentPassword, setCurrentPassword] = useState<string | ''>('')
     const [newPassword, setNewPassword] = useState<string | ''>('')
@@ -54,13 +27,19 @@ export default function Settings() {
     );
 
 
+    useEffect(() => {
+        if (information) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setUser(information)
+        }
+
+    }, [information])
+
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-
-        setUser((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+        setUser((prev) => { if (!prev) return prev; return { ...prev, [name]: value }; });
+        console.log(user)
     };
 
 
@@ -73,16 +52,13 @@ export default function Settings() {
 
         setPreview(imageUrl);
 
-        setUser((prev) => ({
-            ...prev,
-            image: file,
-        }));
     };
 
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         setLoad(true)
         e.preventDefault();
+        console.log(user)
         try {
             const result = await updateUserapi(user)
 
@@ -203,7 +179,7 @@ export default function Settings() {
                     </h2>
 
                     <p className="text-[11px] text-gray-500">
-                        {information?.email}
+                        {information?.email || 'empty'}
                     </p>
                 </div>
 
@@ -232,7 +208,7 @@ export default function Settings() {
                         <input
                             name="email"
                             disabled
-                            value={user.email}
+                            value={information?.email || ''}
                             className="w-full mt-1 px-3 py-2 text-sm rounded-lg border border-gray-200 bg-gray-100 text-gray-500"
                         />
                     </div>
