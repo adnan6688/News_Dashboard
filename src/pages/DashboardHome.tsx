@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ctrApi, recentAddedvideoapi, recentBannarApi, recentFiveUsersapi, topusersapi, userAnalyticsApi, userInfoCoutnapi } from "../api/newsapi";
+import { admobsSetup, ctrApi, recentAddedvideoapi, recentBannarApi, recentFiveUsersapi, topusersapi, userAnalyticsApi, userInfoCoutnapi } from "../api/newsapi";
 import {
     Newspaper,
     Users,
@@ -17,12 +17,16 @@ import Bannars from "../Components/Bannars";
 import CtrAnalyticsList from "../Components/CtrAnalyticsList";
 import TopUsers from "../Components/TopUsers";
 import { Link } from "react-router";
+import { useAuth } from "../Hook/useAuth";
 
 
 
 export default function DashboardHome() {
-   
+
     const [yearInfo, setYearInfo] = useState<number>(new Date().getFullYear())
+
+    const { user , refetchUser } = useAuth()
+
 
     const { data: userCount } = useQuery({
         queryKey: ['count'],
@@ -53,13 +57,13 @@ export default function DashboardHome() {
     })
 
 
-    const { data: bannarsData, isLoading: BannarLoading  } = useQuery({
+    const { data: bannarsData, isLoading: BannarLoading } = useQuery({
         queryKey: ['recentBannar'],
         queryFn: recentBannarApi, retry: false,
         refetchOnWindowFocus: false,
     })
 
-    
+
     const { data: ctrData, isLoading: ctrLoading } = useQuery({
         queryKey: ['ctr'],
         queryFn: () => ctrApi(5),
@@ -76,22 +80,71 @@ export default function DashboardHome() {
 
 
 
+    const handleadmob = async () => {
+
+        try {
+          await  admobsSetup()
+refetchUser()
+        }
+        catch {
+            //
+        }
+    }
+
 
 
     return (
         <div className="">
 
-            <div className="flex items-center gap-2.5 px-4  pb-2">
+            <div className="flex items-center justify-between px-4 pb-2">
 
-                <span className="relative flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                </span>
+                {/* Left side */}
+                <div className="flex items-center gap-2.5">
+                    <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </span>
+
+                    <h1 className="text-xl font-extrabold text-slate-800 tracking-tight sm:text-2xl">
+                        Breaking <span className="text-red-500">News</span>
+                    </h1>
+                </div>
+
+                {/* Right side - Toggle */}
+                <div className="flex items-center gap-3">
+                    <span className=" sm:text-lg font-bold text-slate-800 hidden sm:block ">
+                        AdMob
+                    </span>
+
+                    <button
+                        onClick={handleadmob}
+                        className={`relative w-12 cursor-pointer h-6 flex items-center rounded-full transition-all duration-300 shadow-inner focus:outline-none ${user?.admob ? "bg-green-500" : "bg-slate-300"
+                            }`}
+                    >
+                        {/* glow */}
+                        <span
+                            className={`absolute inset-0 rounded-full opacity-20 transition-all duration-300 ${user?.admob
+                                ? "bg-linear-to-r from-green-400 to-emerald-500"
+                                : ""
+                                }`}
+                        />
+
+                        {/* knob */}
+                        <span
+                            className={`absolute w-4 h-4 bg-white rounded-full shadow-md transform transition-all duration-300 ${user?.admob ? "translate-x-7" : "translate-x-1"
+                                }`}
+                        />
+                    </button>
 
 
-                <h1 className="text-xl font-extrabold text-slate-800 tracking-tight sm:text-2xl">
-                    Breaking <span className="text-red-500">News</span>
-                </h1>
+                    <span
+                        className={`text-sm font-semibold ${user?.admob ? "text-green-600" : "text-slate-500"
+                            }`}
+                    >
+                        {user?.admob ? "ON" : "OFF"}
+                    </span>
+                </div>
+
             </div>
             <Breakingnews />
 
@@ -253,7 +306,7 @@ export default function DashboardHome() {
 
 
             <div className="my-4">
-                <Bannars  banners={bannarsData?.data} isLoading={BannarLoading} />
+                <Bannars banners={bannarsData?.data} isLoading={BannarLoading} />
             </div>
 
         </div>

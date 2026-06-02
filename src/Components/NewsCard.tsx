@@ -1,10 +1,28 @@
+import type { UseQueryResult } from "@tanstack/react-query";
 import type { NewsItem } from "../api/newsapi"
+import axiosInstance from "../BaseUrl/baseurl"
+import Toast from "../Toast/Toast"
 
 type Props = {
-    data: NewsItem[]
-}
+    data: NewsItem[];
+     refetch: UseQueryResult["refetch"];
+};
 
-export default function NewsCard({ data }: Props) {
+export default function NewsCard({ data, refetch }: Props) {
+
+    const handleToggleBreaking = async (newsId: number) => {
+        try {
+
+            const result = await axiosInstance.patch(`/news/latest-news-add-from-news?newsId=${newsId}`)
+
+            if (result?.data) {
+                refetch()
+                Toast({ type: 'success', message: result?.data?.message })
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
 
     return (
@@ -12,8 +30,21 @@ export default function NewsCard({ data }: Props) {
             {data?.map((item: NewsItem) => (
                 <div
                     key={item._id}
-                    className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition border border-gray-100"
+                    className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition border border-gray-100 relative"
                 >
+                    {/* Toggle Button */}
+                    <button
+                        type="button"
+                        className={`absolute cursor-pointer top-2 right-2 w-10 h-5 flex items-center rounded-full p-1 transition z-50 ${item?.isBreaking ? "bg-green-500" : "bg-gray-300"
+                            }`}
+                        onClick={() => handleToggleBreaking(item?.id)}
+                    >
+                        <div
+                            className={`w-4 h-4 bg-white rounded-full shadow transition-transform duration-300 ${item?.isBreaking ? "translate-x-5" : "translate-x-0"
+                                }`}
+                        />
+                    </button>
+
                     {/* Image */}
                     <div className="relative h-40 w-full overflow-hidden">
                         <img
@@ -22,31 +53,27 @@ export default function NewsCard({ data }: Props) {
                             className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                         />
 
-                        {/* CTR Badge Top */}
-                        <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
+                        {/* CTR Badge */}
+                        <div className="absolute top-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
                             CTR {item.ctr}%
                         </div>
                     </div>
 
                     {/* Content */}
                     <div className="p-4 space-y-2">
-                        {/* Category */}
-                        <span className="text-[10px]  bg-red-50 text-red-600 px-2 py-1 rounded-full">
+                        <span className="text-[10px] bg-red-50 text-red-600 px-2 py-1 rounded-full">
                             {item.category?.[0]}
                         </span>
 
-                        {/* Title */}
                         <h2 className="font-semibold text-gray-800 line-clamp-2 text-sm group-hover:text-red-600 transition">
                             {item.title}
                         </h2>
 
-                        {/* Meta */}
                         <div className="flex items-center justify-between text-[14px] text-gray-500">
                             <span>Impressions: {item.impressions || 0}</span>
                             <span>Clicks: {item.clicks}</span>
                         </div>
 
-                        {/* Author */}
                         <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
                             <img
                                 src={item.author?.image}
@@ -57,7 +84,6 @@ export default function NewsCard({ data }: Props) {
                             </span>
                         </div>
 
-                        {/* Button */}
                         <a
                             href={item.link}
                             target="_blank"

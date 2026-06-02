@@ -15,7 +15,8 @@ export interface IUser {
   birth_date: string; // ISO date string
   createdAt: string;
   updatedAt: string;
-  image: string | ""
+  image: string | "";
+  admob?: boolean
 }
 
 

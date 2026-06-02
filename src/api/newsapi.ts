@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import axiosInstance from "../BaseUrl/baseurl"
 
-import type { UserType } from "../pages/Settings"
+
 import { getErrorMessage } from "../Utils/errorMessage"
 
 
@@ -13,9 +13,11 @@ import { getErrorMessage } from "../Utils/errorMessage"
 export const breakingNewsApi = async () => {
 
 
+
     try {
 
         const news = await axiosInstance.get('news/breaking-news')
+
         return {
             success: true,
             news: news.data.data.allNews || []
@@ -24,7 +26,7 @@ export const breakingNewsApi = async () => {
     } catch (err) {
 
         const message = getErrorMessage(err)
-        console.log(message)
+        console.log(message, 'ttt')
         return {
             success: false,
             message
@@ -376,6 +378,7 @@ export type NewsItem = {
     impressions: number;
     ctr: number;
     views?: number;
+    isBreaking: boolean;
 };
 
 
@@ -478,7 +481,7 @@ export const logoutUserapi = async () => {
 
 
 
-export const updateUserapi = async (payload: UserType) => {
+export const updateUserapi = async (payload: { name: string, birth_date: string, image: File }) => {
     try {
         const formData = new FormData();
 
@@ -554,4 +557,104 @@ export const verifyOTp = async (email: string, otp: string) => {
 export const updatepasswordapi = async (email: string, password: string) => {
     const res = await axiosInstance.post('/password/reset-password', { email, password })
     return res?.data
+}
+
+
+
+
+export const sendNotifications = async (payload: { title: string, headline: string, link: string, file: File }) => {
+    try {
+        //
+        const result = await axiosInstance.post('notification/sendnotifiication', payload, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        })
+        return {
+            success: true,
+            message: result?.data?.message
+        }
+    } catch (err) {
+        const message = getErrorMessage(err)
+        return {
+            success: false,
+            message: message
+        }
+    }
+}
+
+
+
+export const getAllNotifications = async (page?: number, search?: string, limit?: number) => {
+
+
+    const params: IParams = {}
+    if (limit) {
+        params.limit = limit
+    }
+    if (page) {
+        params.page = page
+    }
+    if (search) {
+        params.search = search
+    }
+
+    try {
+        const result = await axiosInstance.get('notification/all-notifications', { params })
+
+
+
+        return {
+            data: result?.data?.data,
+            meta: result?.data?.meta
+        }
+
+    } catch (err) {
+        const message = getErrorMessage(err)
+        return {
+            success: false,
+            message
+        }
+    }
+}
+
+
+
+export const deleteNotifications = async (id: string) => {
+
+    try {
+        const result = await axiosInstance.delete(`notification/deleteNotifications/${id}`)
+
+        console.log(result)
+        return {
+            success: true,
+            message: 'Notification remove'
+        }
+
+    } catch (err) {
+        const message = getErrorMessage(err)
+        return {
+            success: false,
+            message
+        }
+    }
+}
+
+
+export const admobsSetup = async () => {
+
+
+    try {
+        await axiosInstance.post(`admobs/update-admobs`)
+
+        return true
+    }
+    catch (err) {
+        const message = getErrorMessage(err)
+
+        return {
+            success: false,
+            message
+        }
+    }
 }

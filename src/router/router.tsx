@@ -11,6 +11,7 @@ import Settings from "../pages/Settings";
 import ForgetPassword from "../Components/ForgetPassword";
 import OtpPage from "../Components/OtpPage";
 import ResetPassword from "../Components/Resetpassword";
+import Notifications from "../pages/Notifications";
 
 
 
@@ -52,6 +53,9 @@ export const router = createBrowserRouter([
             {
                 path: 'settings',
                 element: <Settings></Settings>
+            }, {
+                path : 'notifications',
+                element : <Notifications></Notifications>
             }
         ]
     }

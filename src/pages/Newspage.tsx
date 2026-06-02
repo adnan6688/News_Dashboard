@@ -14,7 +14,7 @@ export default function Newspage() {
 
     const [currentpage, setCurrentPage] = useState<number>(1)
 
-    const { data: newsData, isLoading } = useQuery({
+    const { data: newsData, isLoading, refetch } = useQuery({
         queryKey: ['get-news', currentpage],
         queryFn: () => getNewsApi(12, currentpage),
         retry: false,
@@ -44,7 +44,10 @@ export default function Newspage() {
                         <Loader />
                     </div>
                 ) : newsData?.data?.data?.length > 0 ? (
-                    <NewsCard data={newsData?.data?.data} />
+                    <NewsCard
+                        refetch={refetch}
+                        data={newsData?.data?.data ?? []}
+                    />
                 ) : (
                     <div className="flex flex-col items-center justify-center py-16 text-gray-500">
                         <p className="text-lg font-medium">No news found 😕</p>

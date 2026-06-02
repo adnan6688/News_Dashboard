@@ -15,7 +15,9 @@ export default function DashboardLayout() {
         { name: "Videos", path: "/dashboard/videos" },
         { name: "Bannar", path: "/dashboard/bannars" },
         { name: "News", path: "/dashboard/news" },
-        { name: "Settings", path: "/dashboard/settings" }
+        { name: "Notifications", path: '/dashboard/notifications' },
+        { name: "Settings", path: "/dashboard/settings" },
+
     ];
     const useLocaion = useLocation()
 
@@ -57,7 +59,7 @@ export default function DashboardLayout() {
                                 }`
                             }
                         >
-                            {item.name}
+                            {item.name }
                         </NavLink>
                     ))}
                 </nav>
