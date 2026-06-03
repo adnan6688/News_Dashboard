@@ -481,7 +481,7 @@ export const logoutUserapi = async () => {
 
 
 
-export const updateUserapi = async (payload: { name: string, birth_date: string, image: File }) => {
+export const updateUserapi = async (payload: { name: string, birth_date: string,   image?: File;}) => {
     try {
         const formData = new FormData();
 

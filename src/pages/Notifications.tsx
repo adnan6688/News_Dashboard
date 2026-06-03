@@ -20,7 +20,6 @@ export default function Notifications() {
         refetchOnWindowFocus: false
     })
 
-console.log(allNotificationsData?.meta)
 
 
     const [form, setForm] = useState({
@@ -68,6 +67,7 @@ console.log(allNotificationsData?.meta)
         }
         try {
             const reuslt = await sendNotifications({ title: form.title, headline: form.headline, link: form.link, file })
+            console.log("result",reuslt)
 
             if (reuslt?.success) {
                 refetch()
@@ -105,7 +105,7 @@ console.log(allNotificationsData?.meta)
         try {
             await deleteNotifications(id)
             refetch()
-            Toast({type : 'success' , message : 'Notification remove successfully!'})
+            Toast({ type: 'success', message: 'Notification remove successfully!' })
 
         }
         catch {
