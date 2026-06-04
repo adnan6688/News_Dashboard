@@ -5,7 +5,7 @@ import Toast from "../Toast/Toast"
 
 type Props = {
     data: NewsItem[];
-     refetch: UseQueryResult["refetch"];
+    refetch: UseQueryResult["refetch"];
 };
 
 export default function NewsCard({ data, refetch }: Props) {
@@ -33,17 +33,7 @@ export default function NewsCard({ data, refetch }: Props) {
                     className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition border border-gray-100 relative"
                 >
                     {/* Toggle Button */}
-                    <button
-                        type="button"
-                        className={`absolute cursor-pointer top-2 right-2 w-10 h-5 flex items-center rounded-full p-1 transition z-50 ${item?.isBreaking ? "bg-green-500" : "bg-gray-300"
-                            }`}
-                        onClick={() => handleToggleBreaking(item?.id)}
-                    >
-                        <div
-                            className={`w-4 h-4 bg-white rounded-full shadow transition-transform duration-300 ${item?.isBreaking ? "translate-x-5" : "translate-x-0"
-                                }`}
-                        />
-                    </button>
+                
 
                     {/* Image */}
                     <div className="relative h-40 w-full overflow-hidden">
@@ -84,13 +74,30 @@ export default function NewsCard({ data, refetch }: Props) {
                             </span>
                         </div>
 
-                        <a
-                            href={item.link}
-                            target="_blank"
-                            className="block mt-3 text-center bg-linear-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white py-2 rounded-xl text-sm transition shadow-sm"
-                        >
-                            Read Article
-                        </a>
+                        <div className="flex gap-2 mt-3">
+                            <a
+                                href={item.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex-1 text-center bg-linear-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white py-2 rounded-xl text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md"
+                            >
+                                Read Article
+                            </a>
+
+                            <button
+                                onClick={() => handleToggleBreaking(item?.id)}
+                                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md ${item?.isBreaking
+                                    ? "bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100"
+                                    : "bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100"
+                                    }`}
+                            >
+                                <span className="text-base">
+                                    {item?.isBreaking ? "⭐" : "✨"}
+                                </span>
+
+                                {item?.isBreaking ? "Featured" : "Make Featured"}
+                            </button>
+                        </div>
                     </div>
                 </div>
             ))}

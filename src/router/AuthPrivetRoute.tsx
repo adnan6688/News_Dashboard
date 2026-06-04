@@ -1,15 +1,16 @@
-import type React from "react"
+import type React from "react";
 import { useAuth } from "../Hook/useAuth";
 import Loader from "../Components/Loader";
 import { Navigate, useLocation } from "react-router";
 
 type Props = {
     children: React.ReactNode;
-}
+};
+
 
 
 export default function AuthPrivetRoute({ children }: Props) {
-    const { user, loading  } = useAuth();
+    const { user, loading } = useAuth();
     const location = useLocation();
 
     if (loading) {
@@ -20,15 +21,16 @@ export default function AuthPrivetRoute({ children }: Props) {
         );
     }
 
-    const isAuthRoute =
-        location.pathname === '/' ||
-        location.pathname === '/forget-password' ||
-        location.pathname.startsWith('/otp-page/') ||
-        location.pathname.startsWith('/reset-password/');
+    const authRoutes = ["/", "/forget-password"];
+    const authPrefixRoutes = ["/otp-page/", "/reset-password/"];
 
-    if (!loading && user && isAuthRoute) {
-     
-     
+    const isAuthRoute =
+        authRoutes.includes(location.pathname) ||
+        authPrefixRoutes.some((path) =>
+            location.pathname.startsWith(path)
+        );
+
+    if (user && isAuthRoute) {
         return <Navigate to="/dashboard" replace />;
     }
 

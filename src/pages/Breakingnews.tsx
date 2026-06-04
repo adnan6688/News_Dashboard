@@ -61,7 +61,7 @@ export default function Breakingnews() {
     }
 
 
-    if (isLoading) return <div className="p-4 text-gray-500 font-medium">Loading breaking news...</div>;
+    if (isLoading) return <div className="p-4 text-gray-500 font-medium">Loading featured news...</div>;
     if (isError) return <div className="p-4 text-red-500">Error loading news</div>;
 
 

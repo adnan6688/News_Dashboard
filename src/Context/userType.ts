@@ -1,6 +1,5 @@
 
 import type { QueryObserverResult } from "@tanstack/react-query";
-import type { LoginUserType } from "./AuthProvider";
 export interface IUser {
   _id: string;
   name: string;
@@ -26,6 +25,6 @@ export interface IValue {
   loading: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   refetchUser: () => Promise<QueryObserverResult<any, Error>>;
-  setAuthUser: React.Dispatch<React.SetStateAction<LoginUserType | null>>;
+
 
 }

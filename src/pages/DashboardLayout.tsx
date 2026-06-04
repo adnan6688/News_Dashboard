@@ -6,15 +6,13 @@ import logo from './../assets/WhatsApp_Image_2026-05-12_at_9.52.35_AM__1_-remove
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { logoutUserapi } from "../api/newsapi";
 import Toast from "../Toast/Toast";
-import { useAuth } from "../Hook/useAuth";
-
 
 export default function DashboardLayout() {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
     const queryClient = useQueryClient();
 
-    const { setAuthUser } = useAuth()
+    // const { setAuthUser } = useAuth()
 
     const menu = [
         { name: "Home", path: "/dashboard" },
@@ -24,33 +22,13 @@ export default function DashboardLayout() {
         { name: "News", path: "/dashboard/news" },
         { name: "Notifications", path: '/dashboard/notifications' },
         { name: "Settings", path: "/dashboard/settings" },
+        { name: "Featured News", path: "/dashboard/featured" },
 
     ];
     const useLocaion = useLocation()
 
 
-    // const { mutate } = useMutation({
-    //     mutationFn: logoutUserapi,
-
-    //     onSuccess: async (data) => {
-
-    //         if (data.success) {
-
-    //             await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
-    //             refetchUser()
-    //             setAuthUser(null)
-    //             console.log("logout", data, user)
-    //             Toast({ type: 'success', message: data?.message })
-    //             navigate("/");
-    //         }
-    //     },
-
-    //     onError: (error) => {
-    //         console.log("Logout failed", error);
-    //         // toast.error(error?.response?.data?.message || "Something went wrong");
-    //     },
-    // });
-    const { mutate } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: logoutUserapi,
 
         onSuccess: async (data) => {
@@ -58,12 +36,9 @@ export default function DashboardLayout() {
                 queryClient.setQueryData(["currentUser"], null);
                 queryClient.removeQueries({ queryKey: ["currentUser"] });
 
-                if (setAuthUser) {
-                    setAuthUser(null);
-                }
 
                 Toast({ type: 'success', message: data?.message || "Logged out successfully" });
-                navigate("/", { replace: true }); 
+                navigate("/", { replace: true });
             }
         },
 
@@ -104,12 +79,14 @@ export default function DashboardLayout() {
 
                 <button
                     onClick={() => mutate()}
-                    className="px-6 py-2 text-white m-4 font-medium rounded-full 
-  bg-linear-to-r from-red-700 via-red-800 to-red-900 
-  hover:from-red-600 hover:to-red-700 
-  transition-all duration-300 shadow-md hover:shadow-lg"
+                    disabled={isPending}
+                    className={`px-6 py-2 m-4 cursor-pointer font-medium rounded-full text-white transition-all duration-300 shadow-md
+  bg-linear-to-r from-red-700 via-red-800 to-red-900
+  hover:from-red-600 hover:to-red-700 hover:shadow-lg
+  active:scale-95
+  disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
-                    Logout
+                    {isPending ? "Logging out..." : "Logout"}
                 </button>
             </aside>
 
@@ -160,12 +137,14 @@ export default function DashboardLayout() {
 
                     <button
                         onClick={() => mutate()}
-                        className="px-6 py-2 text-white m-4 font-medium rounded-full 
-  bg-linear-to-r from-red-700 via-red-800 to-red-900 
-  hover:from-red-600 hover:to-red-700 
-  transition-all duration-300 shadow-md hover:shadow-lg"
+                        disabled={isPending}
+                        className={`px-6 py-2 m-4 cursor-pointer font-medium rounded-full text-white transition-all duration-300 shadow-md
+  bg-linear-to-r from-red-700 via-red-800 to-red-900
+  hover:from-red-600 hover:to-red-700 hover:shadow-lg
+  active:scale-95
+  disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
-                        Logout
+                        {isPending ? "Logging out..." : "Logout"}
                     </button>
                 </div>
 

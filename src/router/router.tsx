@@ -14,6 +14,7 @@ import ResetPassword from "../Components/Resetpassword";
 import Notifications from "../pages/Notifications";
 import Not_Found from "../Components/Not_Found";
 import AuthPrivetRoute from "./AuthPrivetRoute";
+import Featured from "../pages/Featured";
 
 
 
@@ -66,6 +67,9 @@ export const router = createBrowserRouter([
             }, {
                 path: 'notifications',
                 element: <Notifications></Notifications>
+            }, {
+                path : 'featured',
+                element : <Featured></Featured>
             }
         ]
     },

@@ -75,7 +75,7 @@
 // export default AuthProvider;
 
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../BaseUrl/baseurl";
 import type { IValue } from "./userType";
@@ -110,8 +110,6 @@ export type LoginUserType = {
 };
 
 const AuthProvider = ({ children }: Props) => {
-    const [authUser, setAuthUser] = useState<LoginUserType | null>(null);
-
     const { data, isLoading, refetch } = useQuery({
         queryKey: ["currentUser"],
         queryFn: async () => {
@@ -122,22 +120,11 @@ const AuthProvider = ({ children }: Props) => {
         staleTime: 1000 * 60 * 5,
     });
 
- 
-    useEffect(() => {
-        if (data) {
-            setAuthUser(data);
-        } else {
-            setAuthUser(null);
-        }
-    }, [data]);
-
     const value: IValue = {
-        user: authUser, 
+        user: data ?? null,
         loading: isLoading,
         refetchUser: refetch,
-        setAuthUser
     };
-
 
     return (
         <AuthContext.Provider value={value}>

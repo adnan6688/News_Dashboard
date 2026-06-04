@@ -157,7 +157,8 @@ type IParams = {
     limit?: number,
     page?: number,
     role?: string,
-    search?: string
+    search?: string,
+    isBreaking?: boolean
 }
 export const ctrApi = async (limit: number) => {
 
@@ -324,7 +325,7 @@ export const uploadBannarapi = async (data: { title: string; link: string; file:
 
 
 // news
-export const getNewsApi = async (limit?: number, page?: number) => {
+export const getNewsApi = async (limit?: number, page?: number, search?: string, isBreaking?: boolean | null) => {
 
     const params: IParams = {}
     if (limit) {
@@ -332,7 +333,16 @@ export const getNewsApi = async (limit?: number, page?: number) => {
     }
     if (page) {
         params.page = page
-    } try {
+    }
+
+    if (search) {
+        params.search = search
+    }
+    if (isBreaking) {
+        params.isBreaking = isBreaking
+    }
+
+    try {
         const res = await axiosInstance.get('/news/admin_all_news', {
             params,
         });

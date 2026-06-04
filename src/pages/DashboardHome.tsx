@@ -25,7 +25,7 @@ export default function DashboardHome() {
 
     const [yearInfo, setYearInfo] = useState<number>(new Date().getFullYear())
 
-    const { user , refetchUser } = useAuth()
+    const { user, refetchUser } = useAuth()
 
 
     const { data: userCount } = useQuery({
@@ -83,8 +83,8 @@ export default function DashboardHome() {
     const handleadmob = async () => {
 
         try {
-          await  admobsSetup()
-refetchUser()
+            await admobsSetup()
+            refetchUser()
         }
         catch {
             //
@@ -106,7 +106,7 @@ refetchUser()
                     </span>
 
                     <h1 className="text-xl font-extrabold text-slate-800 tracking-tight sm:text-2xl">
-                        Breaking <span className="text-red-500">News</span>
+                        Feature <span className="text-red-500">News</span>
                     </h1>
                 </div>
 
@@ -183,7 +183,7 @@ refetchUser()
                 />
 
                 <StatsCard
-                    title="Today Breaking News"
+                    title="Today Featured News"
                     count={userCount?.data?.todayBreakingNews || 0}
                     icon={Flame}
                     iconColor="text-red-500"
