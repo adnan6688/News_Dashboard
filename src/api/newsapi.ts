@@ -475,7 +475,7 @@ export type TUser = {
 
 export const logoutUserapi = async () => {
     try {
-        const res = await fetch("https://admin.kemifilani.ng/api/v1/user/logout", {
+        const res = await fetch("https://api.kemifilani.ng/api/v1/user/logout", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
