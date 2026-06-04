@@ -20,6 +20,11 @@ type Props = {
 };
 
 const TopUsers: React.FC<Props> = ({ data }) => {
+
+
+    
+   
+
     return (
         <div className="w-full overflow-x-auto rounded-2xl border border-gray-100 bg-white shadow-sm">
             {/* Table Header Action Area */}
@@ -39,13 +44,13 @@ const TopUsers: React.FC<Props> = ({ data }) => {
                         <th className="py-3.5 px-6 font-semibold">User Details</th>
                         <th className="py-3.5 px-6 font-semibold text-right">Clicks</th>
                         <th className="py-3.5 px-6 font-semibold text-right">Impressions</th>
-                    <th className="py-3.5 px-6 font-semibold text-right">Performance</th>
+                        <th className="py-3.5 px-6 font-semibold text-right">Performance</th>
                     </tr>
                 </thead>
 
                 {/* Body */}
                 <tbody className="divide-y divide-gray-50">
-                    {data?.map((item, index) => {
+                    {data?.length && data?.map((item, index) => {
                         const isTopThree = index < 3;
                         const rankColors = [
                             "bg-amber-50 text-amber-700 border-amber-200/60 ", // #1 Gold
@@ -119,7 +124,7 @@ const TopUsers: React.FC<Props> = ({ data }) => {
             </table>
 
             {/* Empty state */}
-            {data.length === 0 && (
+            {data?.length === 0 && (
                 <div className="flex flex-col items-center justify-center p-12 text-center bg-gray-50/50">
                     <Users className="w-8 h-8 text-gray-300 mb-2" />
                     <p className="text-sm  text-gray-400">No users found at the moment</p>

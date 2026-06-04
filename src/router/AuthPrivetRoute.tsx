@@ -9,7 +9,7 @@ type Props = {
 
 
 export default function AuthPrivetRoute({ children }: Props) {
-    const { user, loading } = useAuth();
+    const { user, loading  } = useAuth();
     const location = useLocation();
 
     if (loading) {
@@ -27,7 +27,8 @@ export default function AuthPrivetRoute({ children }: Props) {
         location.pathname.startsWith('/reset-password/');
 
     if (!loading && user && isAuthRoute) {
-        console.log("kire",location,user)
+     
+     
         return <Navigate to="/dashboard" replace />;
     }
 

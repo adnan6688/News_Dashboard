@@ -11,20 +11,14 @@ import { getErrorMessage } from "../Utils/errorMessage"
 
 
 export const breakingNewsApi = async () => {
-
-
-
     try {
-
         const news = await axiosInstance.get('news/breaking-news')
-
         return {
             success: true,
             news: news.data.data.allNews || []
         }
 
     } catch (err) {
-
         const message = getErrorMessage(err)
         console.log(message, 'ttt')
         return {
@@ -461,28 +455,51 @@ export type TUser = {
 
 
 
-export const logoutUserapi = async () => {
+// export const logoutUserapi = async () => {
+//     try {
+//         await axiosInstance.post(`/user/logout`)
+//         return {
+//             success: true,
+//             message: "Logout successfully!"
+//         }
 
+//     }
+//     catch (err) {
+//         return {
+//             success: false,
+//             message: "Failed to delete banner",
+//         };
+//     }
+// }
+
+
+export const logoutUserapi = async () => {
     try {
-       const ans =   await axiosInstance.post(`/user/logout`)
-       console.log("data" , ans)
+        const res = await fetch("http://localhost:5000/api/v1/user/logout", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include", 
+        });
+
+        const data = await res.json();
+
+        console.log("logout", data)
         return {
             success: true,
-            message: "Logout successfully!"
-        }
-
-    }
-    catch (err) {
+            message: data?.message || "Logout successfully!",
+        };
+    } catch (err) {
         return {
             success: false,
-            message: "Failed to delete banner",
+            message: "Failed to logout!",
         };
     }
-}
+};
 
 
-
-export const updateUserapi = async (payload: { name: string, birth_date: string,   image?: File;}) => {
+export const updateUserapi = async (payload: { name: string, birth_date: string, image?: File; }) => {
     try {
         const formData = new FormData();
 

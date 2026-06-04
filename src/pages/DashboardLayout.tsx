@@ -4,10 +4,12 @@ import logo from './../assets/WhatsApp_Image_2026-05-12_at_9.52.35_AM__1_-remove
 import { useMutation } from "@tanstack/react-query";
 import { logoutUserapi } from "../api/newsapi";
 import Toast from "../Toast/Toast";
+import { useAuth } from "../Hook/useAuth";
 
 export default function DashboardLayout() {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
+    const { user, refetchUser , setAuthUser } = useAuth()
 
     const menu = [
         { name: "Home", path: "/dashboard" },
@@ -26,8 +28,14 @@ export default function DashboardLayout() {
         mutationFn: logoutUserapi,
 
         onSuccess: (data) => {
-            Toast({ type: 'success', message: data?.message })
-            navigate("/");
+
+            if (data.success) {
+                refetchUser()
+                setAuthUser(null)
+                console.log("logout", data, user)
+                Toast({ type: 'success', message: data?.message })
+                navigate("/");
+            }
         },
 
         onError: (error) => {
