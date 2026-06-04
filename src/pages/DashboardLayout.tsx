@@ -121,18 +121,18 @@ export default function DashboardLayout() {
                         ))}
                     </nav>
 
-                      <button
-                    onClick={() => mutate()}
-                    className="px-6 py-2 text-white m-4 font-medium rounded-full 
+                    <button
+                        onClick={() => mutate()}
+                        className="px-6 py-2 text-white m-4 font-medium rounded-full 
   bg-linear-to-r from-red-700 via-red-800 to-red-900 
   hover:from-red-600 hover:to-red-700 
   transition-all duration-300 shadow-md hover:shadow-lg"
-                >
-                    Logout
-                </button>
+                    >
+                        Logout
+                    </button>
                 </div>
 
-                
+
             </div>
 
             {/* Main Content Area */}

@@ -464,7 +464,8 @@ export type TUser = {
 export const logoutUserapi = async () => {
 
     try {
-        await axiosInstance.post(`/user/logout`)
+       const ans =   await axiosInstance.post(`/user/logout`)
+       console.log("data" , ans)
         return {
             success: true,
             message: "Logout successfully!"

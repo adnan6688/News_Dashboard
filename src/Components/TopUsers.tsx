@@ -45,7 +45,7 @@ const TopUsers: React.FC<Props> = ({ data }) => {
 
                 {/* Body */}
                 <tbody className="divide-y divide-gray-50">
-                    {data.map((item, index) => {
+                    {data?.map((item, index) => {
                         const isTopThree = index < 3;
                         const rankColors = [
                             "bg-amber-50 text-amber-700 border-amber-200/60 ", // #1 Gold

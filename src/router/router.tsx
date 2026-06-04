@@ -12,22 +12,32 @@ import ForgetPassword from "../Components/ForgetPassword";
 import OtpPage from "../Components/OtpPage";
 import ResetPassword from "../Components/Resetpassword";
 import Notifications from "../pages/Notifications";
+import Not_Found from "../Components/Not_Found";
+import AuthPrivetRoute from "./AuthPrivetRoute";
 
 
 
 export const router = createBrowserRouter([
     {
         path: '/',
-        element: <Login></Login>
+        element: <AuthPrivetRoute>
+            <Login></Login>
+        </AuthPrivetRoute>
     }, {
         path: '/forget-password',
-        element: <ForgetPassword />
+        element: <AuthPrivetRoute>
+            <ForgetPassword />
+        </AuthPrivetRoute>
     }, {
         path: '/otp-page/:email',
-        element: <OtpPage />
+        element: <AuthPrivetRoute>
+            <OtpPage />
+        </AuthPrivetRoute>
     }, {
         path: '/reset-password/:email',
-        element: <ResetPassword />
+        element: <AuthPrivetRoute>
+            <ResetPassword />
+        </AuthPrivetRoute>
     }, {
         path: '/dashboard',
         element: <PrivetRoutes>
@@ -54,9 +64,13 @@ export const router = createBrowserRouter([
                 path: 'settings',
                 element: <Settings></Settings>
             }, {
-                path : 'notifications',
-                element : <Notifications></Notifications>
+                path: 'notifications',
+                element: <Notifications></Notifications>
             }
         ]
+    },
+    {
+        path: '/*',
+        element: <Not_Found></Not_Found>
     }
 ])
