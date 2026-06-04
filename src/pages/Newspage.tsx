@@ -39,6 +39,8 @@ export default function Newspage() {
     }
 
 
+
+
     return (
         <div>
             <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -112,7 +114,7 @@ export default function Newspage() {
                 )
             }
 
-            <Pagination onNext={onNext} onPrev={onPrev} currentPage={newsData?.data?.meta?.page} totalPages={newsData?.data?.meta?.totalpage}></Pagination>
+            <Pagination onNext={onNext} onPrev={onPrev} currentPage={newsData?.data?.meta?.page} totalPages={newsData?.data?.meta?.totalPage}></Pagination>
         </div>
     )
 }

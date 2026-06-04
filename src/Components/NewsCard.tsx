@@ -2,6 +2,7 @@ import type { UseQueryResult } from "@tanstack/react-query";
 import type { NewsItem } from "../api/newsapi"
 import axiosInstance from "../BaseUrl/baseurl"
 import Toast from "../Toast/Toast"
+import { useState } from "react";
 
 type Props = {
     data: NewsItem[];
@@ -10,19 +11,26 @@ type Props = {
 
 export default function NewsCard({ data, refetch }: Props) {
 
+    const [load, setLoad] = useState<null | number>(null)
     const handleToggleBreaking = async (newsId: number) => {
+        setLoad(newsId)
         try {
 
             const result = await axiosInstance.patch(`/news/latest-news-add-from-news?newsId=${newsId}`)
 
             if (result?.data) {
+
                 refetch()
                 Toast({ type: 'success', message: result?.data?.message })
             }
         } catch (err) {
             console.log(err)
         }
+        finally {
+            setLoad(null)
+        }
     }
+    
 
 
     return (
@@ -33,7 +41,7 @@ export default function NewsCard({ data, refetch }: Props) {
                     className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition border border-gray-100 relative"
                 >
                     {/* Toggle Button */}
-                
+
 
                     {/* Image */}
                     <div className="relative h-40 w-full overflow-hidden">
@@ -86,16 +94,21 @@ export default function NewsCard({ data, refetch }: Props) {
 
                             <button
                                 onClick={() => handleToggleBreaking(item?.id)}
-                                className={`flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md ${item?.isBreaking
+                                disabled={load === item?.id}
+                                className={`flex cursor-pointer items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed ${item?.isBreaking
                                     ? "bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100"
                                     : "bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100"
                                     }`}
                             >
-                                <span className="text-base">
-                                    {item?.isBreaking ? "⭐" : "✨"}
+                                <span>
+                                    {load === item?.id ? "⏳" : item?.isBreaking ? "⭐" : "✨"}
                                 </span>
 
-                                {item?.isBreaking ? "Featured" : "Make Featured"}
+                                {load === item?.id
+                                    ? "Updating..."
+                                    : item?.isBreaking
+                                        ? "Featured"
+                                        : "Make Featured"}
                             </button>
                         </div>
                     </div>
