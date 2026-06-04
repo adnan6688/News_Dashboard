@@ -454,25 +454,8 @@ export type TUser = {
 };
 
 
-
-// export const logoutUserapi = async () => {
-//     try {
-//         await axiosInstance.post(`/user/logout`)
-//         return {
-//             success: true,
-//             message: "Logout successfully!"
-//         }
-
-//     }
-//     catch (err) {
-//         return {
-//             success: false,
-//             message: "Failed to delete banner",
-//         };
-//     }
-// }
-
-
+// http://localhost:5000/
+// https://api.kemifilani.ng
 export const logoutUserapi = async () => {
     try {
         const res = await fetch("https://api.kemifilani.ng/api/v1/user/logout", {
@@ -480,12 +463,10 @@ export const logoutUserapi = async () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            credentials: "include", 
+            credentials: "include",
         });
-
         const data = await res.json();
 
-        console.log("logout", data)
         return {
             success: true,
             message: data?.message || "Logout successfully!",

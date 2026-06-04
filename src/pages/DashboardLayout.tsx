@@ -1,15 +1,20 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+
 import { useState } from "react";
 import { Outlet, NavLink, useLocation, useNavigate } from "react-router";
 import logo from './../assets/WhatsApp_Image_2026-05-12_at_9.52.35_AM__1_-removebg-preview.png'
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { logoutUserapi } from "../api/newsapi";
 import Toast from "../Toast/Toast";
 import { useAuth } from "../Hook/useAuth";
 
+
 export default function DashboardLayout() {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
-    const { user, refetchUser , setAuthUser } = useAuth()
+    const queryClient = useQueryClient();
+
+    const { setAuthUser } = useAuth()
 
     const menu = [
         { name: "Home", path: "/dashboard" },
@@ -24,26 +29,50 @@ export default function DashboardLayout() {
     const useLocaion = useLocation()
 
 
+    // const { mutate } = useMutation({
+    //     mutationFn: logoutUserapi,
+
+    //     onSuccess: async (data) => {
+
+    //         if (data.success) {
+
+    //             await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+    //             refetchUser()
+    //             setAuthUser(null)
+    //             console.log("logout", data, user)
+    //             Toast({ type: 'success', message: data?.message })
+    //             navigate("/");
+    //         }
+    //     },
+
+    //     onError: (error) => {
+    //         console.log("Logout failed", error);
+    //         // toast.error(error?.response?.data?.message || "Something went wrong");
+    //     },
+    // });
     const { mutate } = useMutation({
         mutationFn: logoutUserapi,
 
-        onSuccess: (data) => {
-
+        onSuccess: async (data) => {
             if (data.success) {
-                refetchUser()
-                setAuthUser(null)
-                console.log("logout", data, user)
-                Toast({ type: 'success', message: data?.message })
-                navigate("/");
+                queryClient.setQueryData(["currentUser"], null);
+                queryClient.removeQueries({ queryKey: ["currentUser"] });
+
+                if (setAuthUser) {
+                    setAuthUser(null);
+                }
+
+                Toast({ type: 'success', message: data?.message || "Logged out successfully" });
+                navigate("/", { replace: true }); 
             }
         },
 
-        onError: (error) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onError: (error: any) => {
             console.log("Logout failed", error);
-            // toast.error(error?.response?.data?.message || "Something went wrong");
+            Toast({ type: 'error', message: error?.message || "Something went wrong" });
         },
     });
-
 
 
 

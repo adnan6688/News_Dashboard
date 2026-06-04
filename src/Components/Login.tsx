@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from "react";
 import bannar from "../assets/bannar.png";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
@@ -22,19 +23,19 @@ function Login() {
   const userLogin = async ({ email, password, }: { email: string; password: string; }) => {
     const result = await loginFn({ email, password, });
 
-    console.log("result",result)
+
     if (result.success) {
 
-      await refetchUser();
 
+      refetchUser();
       Toast({
         type: "success",
         message: result?.data?.message as string,
       });
 
       setLoginLoad(false);
-
       navigate("/dashboard");
+
     } else {
       Toast({
         type: "error",

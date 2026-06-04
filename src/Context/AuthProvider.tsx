@@ -138,9 +138,6 @@ const AuthProvider = ({ children }: Props) => {
         setAuthUser
     };
 
-    console.log(authUser, "auth provider")
-
-
 
     return (
         <AuthContext.Provider value={value}>
