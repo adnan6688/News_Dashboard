@@ -15,19 +15,26 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPrev
 
 
     return (
-        <div className="flex justify-end mt-4 gap-2">
+        <div className="flex justify-end items-center mt-4 gap-3">
+            {/* Current Page Info */}
+            <span className="text-sm font-medium text-slate-600 dark:text-slate-400 mr-1">
+                Page {totalPages === 0 ? 0 : currentPage} of {totalPages}
+            </span>
+
+            {/* Previous Button */}
             <button
                 onClick={onPrev}
                 disabled={currentPage === 1}
-                className="flex items-center justify-center w-10 h-10 bg-linear-to-br from-slate-700 to-slate-900 text-white rounded-full shadow-md hover:scale-105 hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex cursor-pointer items-center justify-center w-10 h-10 bg-linear-to-br from-red-500 to-red-700 text-white rounded-full shadow-md hover:scale-105 hover:shadow-red-200 hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
                 <ChevronLeft size={20} />
             </button>
 
+            {/* Next Button */}
             <button
                 onClick={onNext}
-                disabled={totalPages==0 ||currentPage === totalPages}
-                className="flex items-center justify-center w-10 h-10 bg-linear-to-br from-slate-700 to-slate-900 text-white rounded-full shadow-md hover:scale-105 hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                disabled={totalPages === 0 || currentPage === totalPages}
+                className="flex cursor-pointer items-center justify-center w-10 h-10 bg-linear-to-br from-red-500 to-red-700 text-white rounded-full shadow-md hover:scale-105 hover:shadow-red-200 hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
                 <ChevronRight size={20} />
             </button>

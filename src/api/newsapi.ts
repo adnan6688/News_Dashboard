@@ -667,3 +667,41 @@ export const admobsSetup = async () => {
         }
     }
 }
+type params = {
+    page?: number,
+    searchTerm?: string,
+    isBreaking? : boolean
+}
+
+export const allFeaturednewsFn = async (page?: number, searchTerm?: string , isBreaking? : boolean | null) => {
+
+
+    try {
+        const query: params = {};
+
+        if (page) {
+            query.page = page;
+        }
+
+        if (searchTerm) {
+            query.searchTerm = searchTerm;
+        }
+        if(isBreaking){
+            query.isBreaking = isBreaking
+        }
+        const data = await axiosInstance.get(`/news/allFeaturednews`, {
+            params: query,
+        });
+        return {
+            success: true,
+            data: data?.data?.data
+        }
+    } catch (err) {
+        const message = getErrorMessage(err)
+
+        return {
+            success: false,
+            message
+        }
+    }
+}
