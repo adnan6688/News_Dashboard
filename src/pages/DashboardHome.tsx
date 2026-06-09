@@ -222,10 +222,12 @@ export default function DashboardHome() {
                     {/* Box 1 */}
                     <div className="w-full sm:w-1/2 bg-white rounded-xl ">
 
-                        {!topusersLoading && topusersData?.length > 0 ? (
+                        {topusersLoading ? (
+                            <p className="text-gray-400 text-sm">Loading top users...</p>
+                        ) : topusersData?.length > 0 ? (
                             <TopUsers data={topusersData || []} />
                         ) : (
-                            <p className="text-gray-400 text-sm">Loading top users...</p>
+                            <p className="text-red-400 text-center items-center text-sm">Top Users Not Found</p>
                         )}
                     </div>
 

@@ -62,7 +62,16 @@ export default function CtrAnalyticsList({ data }: CtrAnalyticsProps) {
 
 
       <div className="grid grid-cols-1 xl:grid-cols-1 gap-6">
-        {data?.map((item) => {
+        {!data?.length ? <div className="col-span-full flex items-center justify-center py-10">
+          <div className="text-center">
+            <h1 className="text-xl font-semibold text-red-500">
+              CTR Not Found
+            </h1>
+            <p className="text-gray-500 mt-2">
+              No CTR data available right now.
+            </p>
+          </div>
+        </div> : data?.map((item) => {
 
           const isBanner = item.type === "BANNAR";
           const targetData = isBanner ? item.bannarsId : item.newsId;
@@ -139,10 +148,10 @@ export default function CtrAnalyticsList({ data }: CtrAnalyticsProps) {
 
 
                   <div className={`flex flex-col items-end justify-center px-3.5 py-1.5 rounded-xl border ${ctrValue > 50
-                      ? 'bg-emerald-50/60 border-emerald-100 text-emerald-600'
-                      : ctrValue > 0
-                        ? 'bg-blue-50/60 border-blue-100 text-blue-600'
-                        : 'bg-slate-50 border-slate-100 text-slate-400'
+                    ? 'bg-emerald-50/60 border-emerald-100 text-emerald-600'
+                    : ctrValue > 0
+                      ? 'bg-blue-50/60 border-blue-100 text-blue-600'
+                      : 'bg-slate-50 border-slate-100 text-slate-400'
                     }`}>
                     <p className="text-[9px] font-extrabold uppercase tracking-widest opacity-80">CTR</p>
                     <p className="text-base font-black tracking-tight mt-0.5">
