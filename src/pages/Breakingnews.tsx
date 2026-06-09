@@ -10,7 +10,7 @@ type NewsItem = {
     image: string;
     date: string;
     isBreaking: boolean;
-    newsId : number
+    newsId: number
 };
 
 
@@ -39,7 +39,7 @@ function timeAgo(date: string | Date) {
 
 export default function Breakingnews() {
 
-    const { data, isLoading, isError , refetch } = useQuery({
+    const { data, isLoading, isError, refetch } = useQuery({
         queryKey: ["news"],
         queryFn: breakingNewsApi,
     });
@@ -69,72 +69,84 @@ export default function Breakingnews() {
 
 
     return (
-        <div className="w-full overflow-hidden whitespace-nowrap bg-transparent py-4 relative group">
+        <div className="w-full overflow-hidden relative py-5 bg-transparent group">
+
+            {/* fade edges */}
+            <div className="absolute inset-y-0 left-0 w-24 bg-linear-to-r from-white to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
             <style>{`
     @keyframes marquee {
-        0% { transform: translateX(0%); }
-        100% { transform: translateX(-50%); }
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
     }
 
-    .animate-custom-marquee {
-        animation: marquee 100s linear infinite;
+    .marquee {
+      animation: marquee 20s linear infinite;
+      will-change: transform;
     }
 
-    .animate-custom-marquee:hover {
-        animation-play-state: paused;
+    .group:hover .marquee {
+      animation-play-state: paused;
     }
-`}</style>
+  `}</style>
 
-            <div className="absolute inset-y-0 left-0 w-16 bg-linear-to-r from-gray-50 to-transparent z-10 pointer-events-none" />
-            <div className="absolute inset-y-0 right-0 w-16 bg-linear-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
-
-
-            <div className="flex gap-4 w-max animate-custom-marquee group-hover:[animation-play-state:paused]">
-
+            <div className="flex gap-5 w-max marquee">
 
                 {newsList?.map((news, index) => (
                     <div
-                        key={`orig-${news._id || index}`}
-                        className="relative flex items-center w-95 h-23 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden shrink-0"
+                        key={news._id || index}
+                        className="relative flex items-center w-90 h-24 shrink-0 rounded-2xl
+        bg-white/70 backdrop-blur-xl border border-white/40
+        shadow-md hover:shadow-xl hover:scale-[1.03]
+        transition-all duration-300 overflow-hidden"
                     >
-                        {/* Toggle Button (Top Right) */}
+
+                        {/* breaking toggle */}
                         <button
                             onClick={() => handleToggleBreaking(news?.newsId)}
-                            className={`absolute cursor-pointer top-2 right-2 w-10 h-5 flex items-center rounded-full p-1 transition ${news?.isBreaking ? "bg-green-500" : "bg-gray-300"
-                                }`}
+                            className={`absolute top-2 right-2 w-11 h-6 flex items-center rounded-full p-1 transition
+          ${news?.isBreaking ? "bg-emerald-500" : "bg-gray-300"}`}
                         >
                             <div
-                                className={`w-4 h-4 bg-white rounded-full shadow transform transition ${news?.isBreaking ? "translate-x-5" : "translate-x-0"
-                                    }`}
+                                className={`w-4.5 h-4.5 bg-white rounded-full shadow-md transition-transform duration-300
+            ${news?.isBreaking ? "translate-x-5" : "translate-x-0"}`}
                             />
                         </button>
 
-                        <div className="w-30 h-full shrink-0">
+                        {/* image */}
+                        <div className="w-28 h-full shrink-0 overflow-hidden">
                             <img
                                 src={news.image}
                                 alt={news.title}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover hover:scale-110 transition duration-500"
                                 onError={(e) => {
-                                    (e.target as HTMLImageElement).src =
+                                    (e.currentTarget as HTMLImageElement).src =
                                         "https://placehold.co/120x100?text=News";
                                 }}
                             />
                         </div>
 
-                        <div className="p-3 flex flex-col justify-between h-full grow min-w-0 text-left whitespace-normal">
+                        {/* content */}
+                        <div className="p-3 flex flex-col justify-between h-full min-w-0">
                             <h3 className="text-sm font-semibold text-gray-800 line-clamp-2 leading-snug">
                                 {news.title}
                             </h3>
-                            <span className="text-[11px] text-gray-400">
-                                {news.date ? timeAgo(news.date) : "just now"}
-                            </span>
+
+                            <div className="flex items-center justify-between">
+                                <span className="text-[11px] text-gray-400">
+                                    {news.date ? timeAgo(news.date) : "just now"}
+                                </span>
+
+                                {news.isBreaking && (
+                                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-500 font-medium">
+                                        LIVE
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
                 ))}
-
-
-         
 
             </div>
         </div>
