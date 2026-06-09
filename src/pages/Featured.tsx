@@ -27,7 +27,7 @@ export default function Featured() {
 
   const { data: featuredNews, isLoading, isError, refetch } = useQuery(
     {
-      queryKey: ['featureds', finalSearch, isBreaking, currentPage],
+      queryKey: ['featureds', currentPage, finalSearch, isBreaking],
       queryFn: () => allFeaturednewsFn(currentPage, finalSearch, isBreaking)
     })
 
@@ -43,9 +43,8 @@ export default function Featured() {
     setLoad(newsId)
     try {
 
-      const result = await axiosInstance.patch(`/news/latest-news-add-from-news?newsId=${newsId}`)
+      const result = await axiosInstance.patch(`/news/change-news-status?newsId=${newsId}`)
 
-      console.log(result , "äsdfasdfasdf")
       if (result?.data) {
 
         refetch()
@@ -87,26 +86,12 @@ export default function Featured() {
       {/* Static Filters */}
       <div className="flex gap-3 mb-6 flex-wrap">
         {/* All Button */}
-        <button
-          onClick={() => {
-            setSearch("");
-            setFinalSearch("");
-            setIsBreaking(null);
-            setCurrentPage(1)
-            refetch();
-          }}
-          className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 active:scale-95 shadow-sm ${isBreaking === null
-            ? "bg-red-600 text-white"
-            : "bg-red-100 text-red-600 hover:bg-red-200"
-            }`}
-        >
-          All
-        </button>
+      
 
         {/* Featured Button */}
         <button
           onClick={() => setIsBreaking(true)}
-          className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 active:scale-95 shadow-sm ${isBreaking === true
+          className={`px-4 cursor-pointer py-2 rounded-lg text-sm font-semibold transition-all duration-200 active:scale-95 shadow-sm ${isBreaking === true
             ? "bg-red-600 text-white"
             : "bg-red-100 text-red-600 hover:bg-red-200"
             }`}
@@ -117,7 +102,7 @@ export default function Featured() {
         {/* Regular / Not Featured Button */}
         <button
           onClick={() => setIsBreaking(false)}
-          className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 active:scale-95 shadow-sm ${isBreaking === false
+          className={`px-4 cursor-pointer py-2 rounded-lg text-sm font-semibold transition-all duration-200 active:scale-95 shadow-sm ${isBreaking === false
             ? "bg-red-600 text-white"
             : "bg-red-100 text-red-600 hover:bg-red-200"
             }`}
