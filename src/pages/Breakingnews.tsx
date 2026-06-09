@@ -10,6 +10,7 @@ type NewsItem = {
     image: string;
     date: string;
     isBreaking: boolean;
+    newsId : number
 };
 
 
@@ -46,7 +47,7 @@ export default function Breakingnews() {
     const newsList: NewsItem[] = data?.news || [];
 
 
-    const handleToggleBreaking = async (newsId: string) => {
+    const handleToggleBreaking = async (newsId: number) => {
         try {
 
             const result = await axiosInstance.patch(`/news/change-news-status?newsId=${newsId}`)
@@ -59,6 +60,8 @@ export default function Breakingnews() {
             console.log(err)
         }
     }
+
+    console.log(newsList)
 
 
     if (isLoading) return <div className="p-4 text-gray-500 font-medium">Loading featured news...</div>;
@@ -97,7 +100,7 @@ export default function Breakingnews() {
                     >
                         {/* Toggle Button (Top Right) */}
                         <button
-                            onClick={() => handleToggleBreaking(news._id)}
+                            onClick={() => handleToggleBreaking(news?.newsId)}
                             className={`absolute cursor-pointer top-2 right-2 w-10 h-5 flex items-center rounded-full p-1 transition ${news?.isBreaking ? "bg-green-500" : "bg-gray-300"
                                 }`}
                         >
@@ -131,31 +134,7 @@ export default function Breakingnews() {
                 ))}
 
 
-                {newsList?.map((news, index) => (
-                    <div
-                        key={`dup-${news._id || index}`}
-                        className="flex items-center w-95 h-24 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden shrink-0"
-                    >
-                        <div className="w-30 h-full shrink-0">
-                            <img
-                                src={news.image}
-                                alt={news.title}
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                    (e.target as HTMLImageElement).src = 'https://placehold.co/120x100?text=News';
-                                }}
-                            />
-                        </div>
-                        <div className="p-3 flex flex-col justify-between h-full grow min-w-0 text-left whitespace-normal">
-                            <h3 className="text-sm font-semibold text-gray-800 line-clamp-2 leading-snug">
-                                {news.title}
-                            </h3>
-                            <span className="text-[11px] text-gray-400">
-                                {news.date ? timeAgo(news.date) : "just now"}
-                            </span>
-                        </div>
-                    </div>
-                ))}
+         
 
             </div>
         </div>
