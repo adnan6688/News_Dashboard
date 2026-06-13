@@ -61,7 +61,6 @@ export default function Breakingnews() {
         }
     }
 
-    console.log(newsList)
 
 
     if (isLoading) return <div className="p-4 text-gray-500 font-medium">Loading featured news...</div>;
@@ -73,7 +72,7 @@ export default function Breakingnews() {
 
             {/* fade edges */}
             <div className="absolute inset-y-0 left-0 w-24 bg-linear-to-r from-white to-transparent z-10 pointer-events-none" />
-            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+            <div className="absolute inset-y-0 right-0 w-24 bg-linear-to-l from-white to-transparent z-10 pointer-events-none" />
 
             <style>{`
     @keyframes marquee {

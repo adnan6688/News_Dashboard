@@ -19,7 +19,7 @@ export default function Users() {
     refetchOnWindowFocus: false,
   })
 
-  console.log(getUsers?.data)
+
 
   useEffect(() => {
     const interval = setTimeout(() => {

@@ -11,10 +11,9 @@ export default function PrivetRoutes({ children }: Props) {
     const { loading, user } = useAuth();
     const location = useLocation();
 
-    console.log("privet routes" ,  user , loading)
-
+   
     if (loading) {
-        console.log("loading , priver" , loading , user)
+   
         return <div className="flex justify-center items-center ">
             <Loader></Loader>
         </div>;

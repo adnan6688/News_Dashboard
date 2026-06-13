@@ -15,6 +15,7 @@ import Notifications from "../pages/Notifications";
 import Not_Found from "../Components/Not_Found";
 import AuthPrivetRoute from "./AuthPrivetRoute";
 import Featured from "../pages/Featured";
+import BirthDay from "../pages/BirthDay";
 
 
 
@@ -70,6 +71,10 @@ export const router = createBrowserRouter([
             }, {
                 path : 'featured',
                 element : <Featured></Featured>
+            },
+            {
+                path : 'birthday',
+                element : <BirthDay></BirthDay>
             }
         ]
     },

@@ -67,7 +67,7 @@ export default function Notifications() {
         }
         try {
             const reuslt = await sendNotifications({ title: form.title, headline: form.headline, link: form.link, file })
-            console.log("result",reuslt)
+           
 
             if (reuslt?.success) {
                 refetch()
@@ -85,8 +85,7 @@ export default function Notifications() {
         }
 
         console.log("🚀 Sending Notification:");
-        console.log("Form:", form);
-        console.log("File:", file);
+     
 
         setOpen(false);
     };

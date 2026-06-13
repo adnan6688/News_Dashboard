@@ -22,7 +22,6 @@ export default function ResetPassword() {
         setLoad(true)
         e.preventDefault()
 
-        console.log(password, confirmPassword)
         if (!password || !confirmPassword) {
             Toast({ type: 'error', message: 'All fields are required!' })
             return

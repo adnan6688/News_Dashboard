@@ -23,6 +23,7 @@ export default function DashboardLayout() {
         { name: "Notifications", path: '/dashboard/notifications' },
         { name: "Settings", path: "/dashboard/settings" },
         { name: "Featured News", path: "/dashboard/featured" },
+        { name: "Birthday", path: "/dashboard/birthday" },
 
     ];
     const useLocaion = useLocation()
@@ -44,7 +45,7 @@ export default function DashboardLayout() {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onError: (error: any) => {
-            console.log("Logout failed", error);
+            
             Toast({ type: 'error', message: error?.message || "Something went wrong" });
         },
     });

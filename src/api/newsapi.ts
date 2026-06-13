@@ -20,7 +20,7 @@ export const breakingNewsApi = async () => {
 
     } catch (err) {
         const message = getErrorMessage(err)
-        console.log(message, 'ttt')
+
         return {
             success: false,
             message
@@ -505,7 +505,7 @@ export const updateUserapi = async (payload: { name: string, birth_date: string,
             formData.append("file", payload.image);
         }
 
-        const res = await axiosInstance.patch(
+        await axiosInstance.patch(
             "/user/updateinformation",
             formData,
             {
@@ -515,7 +515,7 @@ export const updateUserapi = async (payload: { name: string, birth_date: string,
             }
         );
 
-        console.log(res, "response");
+
 
         return {
             success: true,
@@ -632,9 +632,8 @@ export const getAllNotifications = async (page?: number, search?: string, limit?
 export const deleteNotifications = async (id: string) => {
 
     try {
-        const result = await axiosInstance.delete(`notification/deleteNotifications/${id}`)
+        await axiosInstance.delete(`notification/deleteNotifications/${id}`)
 
-        console.log(result)
         return {
             success: true,
             message: 'Notification remove'
@@ -670,10 +669,10 @@ export const admobsSetup = async () => {
 type params = {
     page?: number,
     searchTerm?: string,
-    isBreaking? : boolean
+    isBreaking?: boolean
 }
 
-export const allFeaturednewsFn = async (page?: number, searchTerm?: string , isBreaking? : boolean | null) => {
+export const allFeaturednewsFn = async (page?: number, searchTerm?: string, isBreaking?: boolean | null) => {
 
 
     try {
@@ -686,7 +685,7 @@ export const allFeaturednewsFn = async (page?: number, searchTerm?: string , isB
         if (searchTerm) {
             query.searchTerm = searchTerm;
         }
-        if(isBreaking){
+        if (isBreaking) {
             query.isBreaking = isBreaking
         }
         const data = await axiosInstance.get(`/news/allFeaturednews`, {
@@ -702,6 +701,40 @@ export const allFeaturednewsFn = async (page?: number, searchTerm?: string , isB
         return {
             success: false,
             message
+        }
+    }
+}
+
+
+export const informaitonOFbithday = async ()=>{
+
+    try{
+        const res = await axiosInstance.get('admobs/birthday-info')
+        return {
+            data : res?.data?.data || {}
+        }
+    }
+    catch(err){
+        const message = getErrorMessage(err)
+        return {
+            message : message
+        }
+    }
+}
+
+
+export const bithdayMessagUPdate = async  (id:string , message : string)=>{
+
+    try{
+        const res = await axiosInstance.patch(`/admobs/bithday-message/${id}`,{message})
+        return {
+            result : res?.data
+        }
+    }
+    catch(err){
+        const messages  = getErrorMessage(err)
+        return {
+            messages
         }
     }
 }
