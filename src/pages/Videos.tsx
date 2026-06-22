@@ -43,14 +43,15 @@ export default function Videos() {
 
 
   const onPrev = () => {
-
-   
     setCurrentPage(currentPage - 1)
   }
 
   const onNext = () => {
     setCurrentPage(currentPage + 1)
   }
+
+
+  console.log(VideosData?.data)
 
   return (
     <div className="">

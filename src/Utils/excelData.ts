@@ -28,7 +28,7 @@ export type TNews = {
     updatedAt: string;
 };
 
-export const downloadNewsExcel = (newsData: TNews[]) => {
+const downloadNewsExcel = (newsData: TNews[]) => {
 
     const excelData = newsData?.map((news) => ({
         "News_Title": news.title,

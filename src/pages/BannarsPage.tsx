@@ -9,11 +9,11 @@ export default function BannarsPage() {
 
 
     const [currentPage, setCurrentPage] = useState<number>(1)
-
+    const [limit,setLimit] = useState<number>(10)
 
     const { data: bannarsData, isLoading: bannarLoading, isError, refetch } = useQuery({
-        queryKey: ['bannars-data', currentPage],
-        queryFn: () => adminBannarsapi(10, currentPage),
+        queryKey: ['bannars-data', currentPage,limit],
+        queryFn: () => adminBannarsapi(limit, currentPage),
         retry: false,
         refetchOnWindowFocus: false
     })
@@ -39,7 +39,7 @@ export default function BannarsPage() {
 
 
             <UploadForm refetch={refetch}></UploadForm>
-            <Bannars refetch={refetch} type="bannar" banners={bannarsData?.data?.data} isLoading={bannarLoading}></Bannars>
+            <Bannars limit={limit} setLimit={setLimit} refetch={refetch} type="bannar" banners={bannarsData?.data?.data} isLoading={bannarLoading}></Bannars>
 
             <Pagination currentPage={currentPage} onNext={onNext} onPrev={onPrev} totalPages={bannarsData?.data?.meta?.totalpage || 1} ></Pagination>
         </div>
