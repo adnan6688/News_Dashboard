@@ -81,7 +81,6 @@ export default function DashboardHome() {
 
 
     const handleadmob = async () => {
-
         try {
             await admobsSetup()
             refetchUser()

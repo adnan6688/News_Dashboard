@@ -325,7 +325,7 @@ export const uploadBannarapi = async (data: { title: string; link: string; file:
 
 
 // news
-export const getNewsApi = async (limit?: number, page?: number, search?: string, isBreaking?: boolean | null) => {
+export const getNewsApi = async (limit?: number, page?: number, search?: string, isBreaking?: boolean | null ) => {
 
     const params: IParams = {}
     if (limit) {
