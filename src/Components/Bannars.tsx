@@ -23,8 +23,8 @@ interface BannersProps {
   type?: 'bannar' | 'dashboard',
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   refetch?: () => Promise<any>,
-  limit: number,
-  setLimit: React.Dispatch<React.SetStateAction<number>>
+  limit?: number,
+  setLimit?: React.Dispatch<React.SetStateAction<number>>
 
 }
 
@@ -101,7 +101,7 @@ export default function Bannars({ banners, isLoading, type, refetch , limit , se
           <select
             value={limit}
             onChange={(e) => {
-              setLimit(Number(e.target.value));
+             setLimit && setLimit(Number(e.target.value));
               // setCurrentPage(1);
             }}
             className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm shadow-sm outline-none cursor-pointer"

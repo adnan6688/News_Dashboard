@@ -307,7 +307,7 @@ export default function DashboardHome() {
 
 
             <div className="my-4">
-                <Bannars banners={bannarsData?.data} isLoading={BannarLoading} />
+                <Bannars  banners={bannarsData?.data} isLoading={BannarLoading} />
             </div>
 
         </div>
