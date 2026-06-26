@@ -3,6 +3,9 @@ import { getAllUsersApi, type TUser } from "../api/newsapi"
 import image from './../assets/unknown.png'
 import Pagination from "../Components/Pagination"
 import { useEffect, useState } from "react"
+import { Delete, Loader2 } from "lucide-react"
+import axiosInstance from "../BaseUrl/baseurl"
+import Toast from "../Toast/Toast"
 const roles = ["All", "USER", "GUEST"];
 
 export default function Users() {
@@ -12,7 +15,10 @@ export default function Users() {
   const [searchText, setSearchText] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
-  const { data: getUsers, isLoading: usersLoading } = useQuery({
+  const [deleteId, setDeletedId] = useState<string>("")
+  const [deleteLoad, setDeleteLoad] = useState<boolean>(false)
+
+  const { data: getUsers, isLoading: usersLoading, refetch } = useQuery({
     queryKey: ['get-users', currentPage, activeRole, debouncedSearch],
     queryFn: () => getAllUsersApi(10, currentPage, activeRole, debouncedSearch),
     retry: false,
@@ -47,6 +53,29 @@ export default function Users() {
     setCurrentpage(currentPage + 1)
   }
 
+
+  const deleteUser = async (id: string) => {
+    setDeleteLoad(true)
+    setDeletedId(id)
+    try {
+      const res = await axiosInstance.delete(`/user/deleteuser/${id}`)
+      if (res?.data?.success) {
+        Toast({ type: 'success', message: res?.data?.message })
+        refetch()
+      }
+    }
+    catch (err: any) {
+
+      const message = err.response?.data?.message ||
+        "Something went wrong";
+
+      console.log(message);
+      Toast({type : 'error' , message})
+    }
+    finally {
+      setDeleteLoad(false)
+    }
+  }
 
 
   return (
@@ -134,6 +163,7 @@ export default function Users() {
                 <th className="py-4 px-6 text-center">Impressions</th>
                 <th className="py-4 px-6 text-center">Total</th>
                 <th className="py-4 px-6 text-center">Installs / Uninstalls</th>
+                <th className="py-4 px-6 text-center">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-sm">
@@ -191,6 +221,19 @@ export default function Users() {
                       <span className="text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">↓ {user.installCount}</span>
                       <span className="text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-100">↑ {user.uninstallCount}</span>
                     </div>
+                  </td>
+
+                  <td className="flex justify-center items-center">
+                    {
+                      deleteLoad && deleteId === user?._id ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : (
+                        <Delete
+                          className="cursor-pointer"
+                          onClick={() => deleteUser(user?._id)}
+                        />
+                      )
+                    }
                   </td>
                 </tr>
               ))}
