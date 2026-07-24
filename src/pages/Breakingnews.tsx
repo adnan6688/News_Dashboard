@@ -138,7 +138,7 @@ export default function Breakingnews() {
 
                                 {news.isBreaking && (
                                     <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-500 font-medium">
-                                        LIVE
+                                        LIVE s
                                     </span>
                                 )}
                             </div>
