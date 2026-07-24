@@ -16,7 +16,7 @@ export default function NewsCard({ data, refetch }: Props) {
         setLoad(newsId)
         try {
 
-            const result = await axiosInstance.patch(`/news/latest-news-add-from-news?newsId=${newsId}`)
+            const result = await axiosInstance.get(`/news/latest-news-add-from-news?newsId=${newsId}`)
 
             if (result?.data) {
 
