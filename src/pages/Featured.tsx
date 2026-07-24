@@ -43,7 +43,7 @@ export default function Featured() {
     setLoad(newsId)
     try {
 
-      const result = await axiosInstance.patch(`/news/change-news-status?newsId=${newsId}`)
+      const result = await axiosInstance.get(`/news/change-news-status?newsId=${newsId}`)
 
       if (result?.data) {
 
